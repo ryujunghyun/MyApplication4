@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="150dp"
-            android:text="버스 ID 입력"
+            android:text="버스 ID "
             android:textSize="30dp"/>
 
         <EditText

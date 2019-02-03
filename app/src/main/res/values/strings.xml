@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_activity_bus_line">busLine</string>
+    <string name="title_activity_bus_password">busPassword</string>
+    <string name="title_activity_bus_id">busID</string>
+    <string name="title_activity_bus_pw">busPW</string>
+    <string name="title_activity_bell">bell</string>
+    <string name="title_activity_animation">animation</string>
+
+</resources>

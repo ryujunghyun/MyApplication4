@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="150dp"
-            android:text="버스 비밀번호 입력"
+            android:text="버스 비밀번호"
             android:textSize="30dp"/>
 
         <EditText

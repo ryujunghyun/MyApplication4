@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button goBusNum = (Button) findViewById(R.id.goBusNum);
+        Button goBusNum = (Button) findViewById(R.id.reservation);
         goBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -21,13 +21,9 @@
             android:label="@string/title_activity_bus_line"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".busID"
-            android:label="@string/title_activity_bus_id"
-            android:parentActivityName=".busLine" />
-        <activity
             android:name=".busPW"
             android:label="@string/title_activity_bus_pw"
-            android:parentActivityName=".busID" />
+            android:parentActivityName=".busLine" />
         <activity
             android:name=".bell"
             android:label="@string/title_activity_bell"

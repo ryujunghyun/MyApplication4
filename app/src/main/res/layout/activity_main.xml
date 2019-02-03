@@ -14,16 +14,24 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
-
-
         <Button
-            android:id="@+id/goBusNum"
+            android:id="@+id/reservation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:text="검색"
-            android:textSize="20dp" />
+            android:layout_marginTop="150dp"
+            android:text="예약제"
+            android:textSize="50dp" />
+        <Button
+            android:id="@+id/realTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="실시간"
+            android:textSize="50dp" />
 
     </LinearLayout>
 

@@ -31,22 +31,14 @@
         android:layout_margin="5dp"
         android:padding="5dp" />
 
-
-    <TextView
-        android:id="@+id/longi"
-        android:layout_width="0dp"
+    <ImageView
+        android:id="@+id/road"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
-        android:padding="5dp"/>
+        android:layout_weight="1"
+        android:src="@drawable/road"
+        />
 
-    <TextView
-        android:id="@+id/lati"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
-        android:padding="5dp" />
 
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -33,8 +34,7 @@ public class busLine extends AppCompatActivity {
     private static final String TAG_ID = "id";
     private static final String TAG_BNAME = "busname";
     private static final String TAG_SNAME = "bustopname";
-    private static final String TAG_LONGI = "longitude";
-    private static final String TAG_LATI ="latitude";
+    private static final String TAG_ROAD = "road";
 
     ArrayList<HashMap<String, String>> mBusList;
     ListView list;
@@ -56,10 +56,11 @@ public class busLine extends AppCompatActivity {
         goBusID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//다음화면으로
-                Intent intent = new Intent(getApplicationContext(), busID.class);
+                Intent intent = new Intent(getApplicationContext(), busPW.class);
                 startActivity(intent);
             }
         });
+
         Button searchBusNum = (Button) findViewById(R.id.searchBusNum);
         searchBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +71,7 @@ public class busLine extends AppCompatActivity {
                 searchBusLine.execute(editText.getText().toString());
 
 
-                //Intent intent = new Intent(getApplicationContext(), busID.class);
-                //startActivity(intent);
+
             }
         });
         mBusList = new ArrayList<>();
@@ -145,7 +145,6 @@ public class busLine extends AppCompatActivity {
                 textview.setText(errorString);
             }
             else {
-
                 myJSON = result;
                 showResult();
             }
@@ -157,7 +156,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://172.30.1.32/bus.php";
+            String serverURL = "http://192.168.0.9/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {
@@ -234,16 +233,16 @@ public class busLine extends AppCompatActivity {
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
 
-
                 HashMap<String,String> BusHashMap = new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
 
-
                 mBusList.add(BusHashMap);
+
             }
+            ImageView road = (ImageView)findViewById(R.id.road);
 
             ListAdapter adapter = new SimpleAdapter(
                     busLine.this, mBusList, R.layout.list_item,

@@ -6,33 +6,47 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".busLine"
-
     android:orientation="vertical">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="버스 번호 검색" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="버스 번호 검색" />
 
         <EditText
             android:id="@+id/editBusNum"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="0.6"
-            android:layout_height="match_parent" />
-
-
+            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/searchBusNum"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
             android:text="버스검색" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="버스 ID 검색" />
+
+        <EditText
+            android:id="@+id/editBusID"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.6"
+            android:layout_height="wrap_content" />
+
 
         <Button
             android:id="@+id/goBusID"
@@ -51,6 +65,7 @@
         android:layout_weight="0.8"
         android:id="@+id/listView1"
         ></ListView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"

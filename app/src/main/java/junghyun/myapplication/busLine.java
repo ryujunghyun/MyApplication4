@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,7 +41,8 @@ public class busLine extends AppCompatActivity {
     ListView list;
     String myJSON;
     TextView textview;
-    EditText editText;
+    EditText busnamesearch;
+    EditText busidsearch;
 
 
     @Override
@@ -50,7 +52,9 @@ public class busLine extends AppCompatActivity {
 
         textview =(TextView)findViewById(R.id.textView);
         list = (ListView)findViewById(R.id.listView1);
-        editText = (EditText)findViewById(R.id.editBusNum);
+        busnamesearch = (EditText)findViewById(R.id.editBusNum);
+        busidsearch = (EditText)findViewById(R.id.editBusID);
+
 
         Button goBusID = (Button)findViewById(R.id.goBusID);
         goBusID.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +72,7 @@ public class busLine extends AppCompatActivity {
                 mBusList.clear();
 
                 GetData searchBusLine = new GetData();
-                searchBusLine.execute(editText.getText().toString());
-
-
-
+                searchBusLine.execute(busnamesearch.getText().toString());
             }
         });
         mBusList = new ArrayList<>();
@@ -188,14 +189,12 @@ public class busLine extends AppCompatActivity {
 
                 JSONObject item = busArray.getJSONObject(i);
 
-                String id = item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
                 String bell = item.getString(TAG_BELL);
 
                 HashMap<String,String> BusHashMap = new HashMap<>();
 
-                BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
                 BusHashMap.put(TAG_BELL, bell);
@@ -207,8 +206,8 @@ public class busLine extends AppCompatActivity {
 
             ListAdapter adapter = new SimpleAdapter(
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_BNAME,TAG_SNAME,TAG_BELL},
-                    new int[]{R.id.id,R.id.busname, R.id.bustopname,R.id.bell}
+                    new String[]{ TAG_BNAME,TAG_SNAME,TAG_BELL},
+                    new int[]{R.id.busname, R.id.bustopname,R.id.bell}
             );
 
             list.setAdapter(adapter);

@@ -39,4 +39,5 @@
             android:id="@+id/goBell"/>
 
     </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

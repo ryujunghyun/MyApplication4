@@ -156,7 +156,7 @@ public class bell extends AppCompatActivity implements OnMapReadyCallback {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://192.168.0.9/bus.php";
+            String serverURL = "http://192.168.0.5/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {

@@ -34,7 +34,7 @@ public class busLine extends AppCompatActivity {
     private static final String TAG_ID = "id";
     private static final String TAG_BNAME = "busname";
     private static final String TAG_SNAME = "bustopname";
-    private static final String TAG_ROAD = "road";
+    private static final String TAG_BELL = "bell";
 
     ArrayList<HashMap<String, String>> mBusList;
     ListView list;
@@ -77,48 +77,7 @@ public class busLine extends AppCompatActivity {
         mBusList = new ArrayList<>();
 
     }
-    /*
-        protected void showList(){
-            try {
-                JSONObject jsonObject = new JSONObject(myJSON);
-                JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
 
-                for(int i=0;i<busArray.length();i++){
-
-                    JSONObject item = busArray.getJSONObject(i);
-
-                    String id = item.getString(TAG_ID);
-                    String busname = item.getString(TAG_BNAME);
-                    String bustopname = item.getString(TAG_SNAME);
-                    String longitude = item.getString(TAG_LONGI);
-                    String latitude = item.getString(TAG_LATI);
-
-                    HashMap<String,String> BusHashMap = new HashMap<>();
-
-                    BusHashMap.put(TAG_ID, id);
-                    BusHashMap.put(TAG_BNAME, busname);
-                    BusHashMap.put(TAG_SNAME, bustopname);
-                    BusHashMap.put(TAG_LONGI, longitude);
-                    BusHashMap.put(TAG_LATI, latitude);
-
-                    mBusList.add(BusHashMap);
-                }
-
-                ListAdapter adapter = new SimpleAdapter(
-                        busLine.this, mBusList, R.layout.list_item,
-                        new String[]{TAG_ID, TAG_SNAME,TAG_LONGI,TAG_LATI},
-                        new int[]{R.id.id, R.id.bustopname, R.id.longi,R.id.lati}
-                );
-
-                list.setAdapter(adapter);
-
-            } catch (JSONException e) {
-
-                Log.d(TAG, "showList : ", e);
-            }
-
-        }
-    */
     private class GetData extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
@@ -156,7 +115,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://192.168.0.9/bus.php";
+            String serverURL = "http://192.168.0.5/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {
@@ -232,25 +191,28 @@ public class busLine extends AppCompatActivity {
                 String id = item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
+                String bell = item.getString(TAG_BELL);
 
                 HashMap<String,String> BusHashMap = new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
+                BusHashMap.put(TAG_BELL, bell);
 
                 mBusList.add(BusHashMap);
 
             }
-            ImageView road = (ImageView)findViewById(R.id.road);
+           // ImageView road = (ImageView)findViewById(R.id.road);
 
             ListAdapter adapter = new SimpleAdapter(
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_BNAME,TAG_SNAME},
-                    new int[]{R.id.id,R.id.busname, R.id.bustopname}
+                    new String[]{TAG_ID, TAG_BNAME,TAG_SNAME,TAG_BELL},
+                    new int[]{R.id.id,R.id.busname, R.id.bustopname,R.id.bell}
             );
 
             list.setAdapter(adapter);
+
 
         } catch (JSONException e) {
 
@@ -258,51 +220,4 @@ public class busLine extends AppCompatActivity {
         }
 
     }
-/*
-    public void getData(String url) {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                String searchKeyword = params[0];
-                String postParameters = "busname = " + searchKeyword;
-
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(searchKeyword);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    String json;
-                    while ((json = bufferedReader.readLine()) != null) {
-                        sb.append(json + "\n");
-                    }
-
-                    return sb.toString().trim();
-
-                } catch (Exception e) {
-                    return null;
-                }
-
-
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                myJSON = result;
-                showList();
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute(url);
-    }
-
-
-
-*/
-
 }

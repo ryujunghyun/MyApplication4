@@ -53,10 +53,10 @@ public class busLine extends AppCompatActivity {
         textview =(TextView)findViewById(R.id.textView);
         list = (ListView)findViewById(R.id.listView1);
         busnamesearch = (EditText)findViewById(R.id.editBusNum);
-        busidsearch = (EditText)findViewById(R.id.editBusID);
+     //   busidsearch = (EditText)findViewById(R.id.editBusID);
 
 
-        Button goBusID = (Button)findViewById(R.id.goBusID);
+     /*   Button goBusID = (Button)findViewById(R.id.goBusID);
         goBusID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//다음화면으로
@@ -64,7 +64,7 @@ public class busLine extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+*/
         Button searchBusNum = (Button) findViewById(R.id.searchBusNum);
         searchBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +116,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://192.168.0.5/bus.php";
+            String serverURL = "http://192.168.0.9/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {

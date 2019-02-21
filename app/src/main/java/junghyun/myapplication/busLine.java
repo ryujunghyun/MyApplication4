@@ -88,7 +88,7 @@ public class busLine extends AppCompatActivity {
 
                 searchBusLine.execute(busnamesearch.getText().toString());
 
-              //  searchBusLine.execute(busnamesearch.getText().toString());
+                //  searchBusLine.execute(busnamesearch.getText().toString());
 
             }
         });
@@ -114,7 +114,7 @@ public class busLine extends AppCompatActivity {
             super.onPostExecute(result);
 
             progressDialog.dismiss();
-           // textview.setText(result);
+            // textview.setText(result);
             Log.d(TAG, "response - " + result);
 
             if (result == null){
@@ -196,7 +196,7 @@ public class busLine extends AppCompatActivity {
     private void showResult(){
         try {
             final JSONObject jsonObject = new JSONObject(myJSON);
-           final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
+            final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
             HashMap<String,String> BusHashMap;
 
             for(int i=0;i<busArray.length();i++){
@@ -205,24 +205,24 @@ public class busLine extends AppCompatActivity {
                 String id=item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
-             // String bell = item.getString(TAG_BELL);
+                // String bell = item.getString(TAG_BELL);
 
                 BusHashMap = new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
-           //     BusHashMap.put(TAG_BELL, bell);
+                //     BusHashMap.put(TAG_BELL, bell);
 
                 mBusList.add(BusHashMap);
 
             }
 
-           // ImageView road = (ImageView)findViewById(R.id.road);
-/*ListAdapter*/
+            // ImageView road = (ImageView)findViewById(R.id.road);
+            /*ListAdapter*/
             adapter = new SimpleAdapter(
 
-           // ImageView road = (ImageView)findViewById(R.id.road);
+                    // ImageView road = (ImageView)findViewById(R.id.road);
 
 
                     busLine.this, mBusList, R.layout.list_item,
@@ -248,7 +248,7 @@ public class busLine extends AppCompatActivity {
                                         Toast.LENGTH_SHORT
                                 ).show();
                             }
-                          else {
+                            else {
                                 Toast.makeText(
                                         getApplicationContext(),
                                         "예약된 정류장: " + clickstop + " 클릭 횟수: " + count[position],
@@ -300,7 +300,7 @@ public class busLine extends AppCompatActivity {
             progressDialog.dismiss();
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
-                clickstop=result;
+            clickstop=result;
         }
 
 
@@ -425,3 +425,4 @@ public class busLine extends AppCompatActivity {
 
 
 }
+

@@ -14,21 +14,32 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:textSize="30dp"
+            android:text="예약을 원하시면 예약제 버튼을 눌러주세요" />
+
         <Button
             android:id="@+id/reservation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="70dp"
             android:text="예약제"
             android:textSize="50dp" />
+
         <Button
             android:id="@+id/realTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
             android:text="실시간"
             android:textSize="50dp" />

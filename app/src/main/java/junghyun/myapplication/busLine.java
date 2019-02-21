@@ -55,6 +55,9 @@ public class busLine extends AppCompatActivity {
     EditText editText;
     Cursor c;
     String clickstop;
+    EditText busnamesearch;
+    EditText busidsearch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +65,15 @@ public class busLine extends AppCompatActivity {
 
         textview =(TextView)findViewById(R.id.textView);
         list = (ListView)findViewById(R.id.listView1);
-        editText = (EditText)findViewById(R.id.editBusNum);
+        busnamesearch = (EditText)findViewById(R.id.editBusNum);
+        busidsearch = (EditText)findViewById(R.id.editBusID);
+
 
         Button goBusID = (Button)findViewById(R.id.goBusID);
         goBusID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//다음화면으로
-                Intent intent = new Intent(getApplicationContext(), busPW.class);
+                Intent intent = new Intent(getApplicationContext(), LastActivity.class);
                 startActivity(intent);
             }
         });
@@ -80,55 +85,17 @@ public class busLine extends AppCompatActivity {
                 mBusList.clear();
 
                 GetData searchBusLine = new GetData();
-                searchBusLine.execute(editText.getText().toString());
+
+                searchBusLine.execute(busnamesearch.getText().toString());
+
+              //  searchBusLine.execute(busnamesearch.getText().toString());
 
             }
         });
         mBusList = new ArrayList<>();
 
     }
-    /*
-        protected void showList(){
-            try {
-                JSONObject jsonObject = new JSONObject(myJSON);
-                JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
 
-                for(int i=0;i<busArray.length();i++){
-
-                    JSONObject item = busArray.getJSONObject(i);
-
-                    String id = item.getString(TAG_ID);
-                    String busname = item.getString(TAG_BNAME);
-                    String bustopname = item.getString(TAG_SNAME);
-                    String longitude = item.getString(TAG_LONGI);
-                    String latitude = item.getString(TAG_LATI);
-
-                    HashMap<String,String> BusHashMap = new HashMap<>();
-
-                    BusHashMap.put(TAG_ID, id);
-                    BusHashMap.put(TAG_BNAME, busname);
-                    BusHashMap.put(TAG_SNAME, bustopname);
-                    BusHashMap.put(TAG_LONGI, longitude);
-                    BusHashMap.put(TAG_LATI, latitude);
-
-                    mBusList.add(BusHashMap);
-                }
-
-                ListAdapter adapter = new SimpleAdapter(
-                        busLine.this, mBusList, R.layout.list_item,
-                        new String[]{TAG_ID, TAG_SNAME,TAG_LONGI,TAG_LATI},
-                        new int[]{R.id.id, R.id.bustopname, R.id.longi,R.id.lati}
-                );
-
-                list.setAdapter(adapter);
-
-            } catch (JSONException e) {
-
-                Log.d(TAG, "showList : ", e);
-            }
-
-        }
-    */
     private class GetData extends AsyncTask<String, Void, String>{
 
         ProgressDialog progressDialog;
@@ -164,12 +131,9 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            //String searchKeyword1 = params[1];
-
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://172.30.58.78/bus.php";
             String postParameters = "busname=" + searchKeyword;
-          //  String postParameters1 = "bustop=" + searchKeyword1;
-          //  int postParameters2 = "id=" +
+
             try {
 
                 URL url = new URL(serverURL);
@@ -238,56 +202,82 @@ public class busLine extends AppCompatActivity {
             for(int i=0;i<busArray.length();i++){
 
                 JSONObject item = busArray.getJSONObject(i);
-
-                String id = item.getString(TAG_ID);
+                String id=item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
+             // String bell = item.getString(TAG_BELL);
 
                 BusHashMap = new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
+           //     BusHashMap.put(TAG_BELL, bell);
 
                 mBusList.add(BusHashMap);
 
             }
-            ImageView road = (ImageView)findViewById(R.id.road);
+
+           // ImageView road = (ImageView)findViewById(R.id.road);
 /*ListAdapter*/
             adapter = new SimpleAdapter(
+
+           // ImageView road = (ImageView)findViewById(R.id.road);
+
+
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_BNAME,TAG_SNAME},
-                    new int[]{R.id.id,R.id.busname, R.id.bustopname}
+                    new String[]{TAG_ID , TAG_BNAME,TAG_SNAME/*,TAG_BELL*/},
+                    new int[]{R.id.id, R.id.busname, R.id.bustopname/*,R.id.bell*/}
             );
 
             list.setAdapter(adapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                int[] count=new int[]{0, 0, 0, 0, 0, 0, 0};
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {//int position, long id는 클릭된 항목의 id
                     //1. 클릭된 mBusList리스트의 id나 location값으로 클릭된 정류장이름 찾아서  2.php로 보냄
+                    count[position]+=1;//아이템의 클릭 횟수 카운트
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
-                        Toast.makeText(
-                                getApplicationContext(),
-                                "클릭된 정류장: "+clickstop,
-                                Toast.LENGTH_SHORT
-                        ).show();
+
+                        if(count[position]>0) {
+                            if(count[position]>=2){
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        "이미 예약되었습니다",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                          else {
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        "예약된 정류장: " + clickstop + " 클릭 횟수: " + count[position],
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
                         GetBustop searchBustop = new GetBustop();
                         searchBustop.execute(clickstop);
+
+
+
                     }
                     catch (JSONException e) {
                         Log.d(TAG, "showResult : ", e);
                     }
 
+
                 }
             });
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//리스트 하나만 선택하도록 하는거*/
+
         } catch (JSONException e) {
 
             Log.d(TAG, "showResult : ", e);
         }
 
     }
+
 
     private class GetBustop extends AsyncTask<String, Void, String>{
 
@@ -319,8 +309,8 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://192.168.0.7/bus.php";
-            String postParameters = "clickstop=" + searchKeyword;
+            String serverURL = "http://172.30.58.78/bus.php";
+            String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
 
@@ -383,6 +373,9 @@ public class busLine extends AppCompatActivity {
 
 
 
+
+
+
 /*
     public void getData(String url) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
@@ -429,5 +422,6 @@ public class busLine extends AppCompatActivity {
 
 
 */
+
 
 }

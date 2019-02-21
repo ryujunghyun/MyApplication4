@@ -6,5 +6,7 @@
     <string name="title_activity_bus_pw">busPW</string>
     <string name="title_activity_bell">bell</string>
     <string name="title_activity_animation">animation</string>
+    <string name="title_activity_pw_for_realtime">pwForRealtime</string>
+    <string name="title_activity_last">LastActivity</string>
 
 </resources>

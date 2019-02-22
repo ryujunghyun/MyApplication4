@@ -55,9 +55,11 @@ public class busLine extends AppCompatActivity {
     EditText editText;
     Cursor c;
     String clickstop;
+    String reservedstop;
+
     EditText busnamesearch;
     EditText busidsearch;
-
+    int bellArray[];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +133,7 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            String serverURL = "http://172.30.58.78/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {
@@ -198,33 +200,45 @@ public class busLine extends AppCompatActivity {
             final JSONObject jsonObject = new JSONObject(myJSON);
             final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
             HashMap<String,String> BusHashMap;
+              HashMap<String, Integer> BellHashMap = new HashMap<>();
+            bellArray=new int[7];
 
             for(int i=0;i<busArray.length();i++){
-
                 JSONObject item = busArray.getJSONObject(i);
                 String id=item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
-                // String bell = item.getString(TAG_BELL);
+                int bell = item.getInt(TAG_BELL);
 
                 BusHashMap = new HashMap<>();
+           //     BellHashMap=new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
-                //     BusHashMap.put(TAG_BELL, bell);
+             //   BusHashMap.put(TAG_BELL, bell);
+                BellHashMap.put(TAG_BELL, bell);
+                bellArray[i]=BellHashMap.get(TAG_BELL);
+                //Log.i("벨해쉬멥", "벨값"+BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
+
 
                 mBusList.add(BusHashMap);
 
             }
+            for(int i=0;i<busArray.length();i++) {
+                Log.i("벨해쉬멥", "벨값" + BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
+            }
+
+              for(int j=0; j<BellHashMap.size(); j++){
+
+                Log.i("NEW", "bellArray: "+bellArray[j]);
+            }
+
 
             // ImageView road = (ImageView)findViewById(R.id.road);
             /*ListAdapter*/
             adapter = new SimpleAdapter(
-
                     // ImageView road = (ImageView)findViewById(R.id.road);
-
-
                     busLine.this, mBusList, R.layout.list_item,
                     new String[]{TAG_ID , TAG_BNAME,TAG_SNAME/*,TAG_BELL*/},
                     new int[]{R.id.id, R.id.busname, R.id.bustopname/*,R.id.bell*/}
@@ -239,32 +253,41 @@ public class busLine extends AppCompatActivity {
                     count[position]+=1;//아이템의 클릭 횟수 카운트
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
+                        if (count[position] > 0) {
 
-                        if(count[position]>0) {
-                            if(count[position]>=2){
+
+                            if (count[position] >= 2) {
                                 Toast.makeText(
                                         getApplicationContext(),
                                         "이미 예약되었습니다",
                                         Toast.LENGTH_SHORT
                                 ).show();
+                            } else {
+
+                                if (bellArray[position] >= 1) {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "이미 예약되었습니다",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+
+                                } else {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "예약된 정류장: " + clickstop,
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+
                             }
-                            else {
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "예약된 정류장: " + clickstop + " 클릭 횟수: " + count[position],
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
+                            GetBustop searchBustop = new GetBustop();
+                            searchBustop.execute(clickstop);
+
                         }
-                        GetBustop searchBustop = new GetBustop();
-                        searchBustop.execute(clickstop);
-
-
-
                     }
-                    catch (JSONException e) {
-                        Log.d(TAG, "showResult : ", e);
-                    }
+                    catch(JSONException e){
+                            Log.d(TAG, "showResult : ", e);
+                        }
 
 
                 }
@@ -309,7 +332,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://172.30.58.78/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -350,6 +373,7 @@ public class busLine extends AppCompatActivity {
 
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
+
                 }
 
 
@@ -370,7 +394,6 @@ public class busLine extends AppCompatActivity {
         }
 
     }
-
 
 
 

@@ -8,5 +8,6 @@
     <string name="title_activity_animation">animation</string>
     <string name="title_activity_pw_for_realtime">pwForRealtime</string>
     <string name="title_activity_last">LastActivity</string>
+    <string name="title_activity_custom_dialog">CustomDialog</string>
 
 </resources>

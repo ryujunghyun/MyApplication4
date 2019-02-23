@@ -1,6 +1,9 @@
 package junghyun.myapplication;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -38,9 +41,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class busLine extends AppCompatActivity {
+    private CustomDialog customDialog;
+    int temp; // 임시 전역변수 - singleChoiceItems 에서 선택항목 저장시 사용
+
+    // 다이얼로그의 ID를 보기 좋은 상수로 선언해서 사용한다
+    final int DIALOG_YES = 1;
+    final int DIALOG_NO = 2; // 리스트 형식의 다이얼로그 ID
+    final int DIALOG_BACK = 3;
+
 
     private static String TAG = "phpquerytest";
-    private static final String TAG_RESULT="webnautes";
+    private static final String TAG_RESULT = "webnautes";
     private static final String TAG_ID = "id";
     private static final String TAG_BNAME = "busname";
     private static final String TAG_SNAME = "bustopname";
@@ -60,18 +71,20 @@ public class busLine extends AppCompatActivity {
     EditText busnamesearch;
     EditText busidsearch;
     int bellArray[];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_line);
 
-        textview =(TextView)findViewById(R.id.textView);
-        list = (ListView)findViewById(R.id.listView1);
-        busnamesearch = (EditText)findViewById(R.id.editBusNum);
-        busidsearch = (EditText)findViewById(R.id.editBusID);
+        textview = (TextView) findViewById(R.id.textView);
+        list = (ListView) findViewById(R.id.listView1);
+        busnamesearch = (EditText) findViewById(R.id.editBusNum);
+        busidsearch = (EditText) findViewById(R.id.editBusID);
 
 
-        Button goBusID = (Button)findViewById(R.id.goBusID);
+        Button goBusID = (Button) findViewById(R.id.goBusID);
         goBusID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//다음화면으로
@@ -98,7 +111,7 @@ public class busLine extends AppCompatActivity {
 
     }
 
-    private class GetData extends AsyncTask<String, Void, String>{
+    private class GetData extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
         String errorString = null;
@@ -119,10 +132,9 @@ public class busLine extends AppCompatActivity {
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
 
-            if (result == null){
+            if (result == null) {
                 textview.setText(errorString);
-            }
-            else {
+            } else {
                 myJSON = result;
                 showResult();
             }
@@ -159,10 +171,9 @@ public class busLine extends AppCompatActivity {
                 Log.d(TAG, "response code - " + responseStatusCode);
 
                 InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
                     inputStream = httpURLConnection.getInputStream();
-                }
-                else{
+                } else {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
@@ -173,7 +184,7 @@ public class busLine extends AppCompatActivity {
                 StringBuilder sb = new StringBuilder();
                 String line;
 
-                while((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     sb.append(line);
                 }
 
@@ -195,43 +206,43 @@ public class busLine extends AppCompatActivity {
     }
 
 
-    private void showResult(){
+    private void showResult() {
         try {
             final JSONObject jsonObject = new JSONObject(myJSON);
             final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
-            HashMap<String,String> BusHashMap;
-              HashMap<String, Integer> BellHashMap = new HashMap<>();
-            bellArray=new int[7];
+            HashMap<String, String> BusHashMap;
+            HashMap<String, Integer> BellHashMap = new HashMap<>();
+            bellArray = new int[7];
 
-            for(int i=0;i<busArray.length();i++){
+            for (int i = 0; i < busArray.length(); i++) {
                 JSONObject item = busArray.getJSONObject(i);
-                String id=item.getString(TAG_ID);
+                String id = item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
                 int bell = item.getInt(TAG_BELL);
 
                 BusHashMap = new HashMap<>();
-           //     BellHashMap=new HashMap<>();
+                //     BellHashMap=new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
-             //   BusHashMap.put(TAG_BELL, bell);
+                //   BusHashMap.put(TAG_BELL, bell);
                 BellHashMap.put(TAG_BELL, bell);
-                bellArray[i]=BellHashMap.get(TAG_BELL);
+                bellArray[i] = BellHashMap.get(TAG_BELL);
                 //Log.i("벨해쉬멥", "벨값"+BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
 
 
                 mBusList.add(BusHashMap);
 
             }
-            for(int i=0;i<busArray.length();i++) {
+            for (int i = 0; i < busArray.length(); i++) {
                 Log.i("벨해쉬멥", "벨값" + BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
             }
 
-              for(int j=0; j<BellHashMap.size(); j++){
+            for (int j = 0; j < BellHashMap.size(); j++) {
 
-                Log.i("NEW", "bellArray: "+bellArray[j]);
+                Log.i("NEW", "bellArray: " + bellArray[j]);
             }
 
 
@@ -240,43 +251,54 @@ public class busLine extends AppCompatActivity {
             adapter = new SimpleAdapter(
                     // ImageView road = (ImageView)findViewById(R.id.road);
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID , TAG_BNAME,TAG_SNAME/*,TAG_BELL*/},
+                    new String[]{TAG_ID, TAG_BNAME, TAG_SNAME/*,TAG_BELL*/},
                     new int[]{R.id.id, R.id.busname, R.id.bustopname/*,R.id.bell*/}
             );
 
             list.setAdapter(adapter);
+           final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    this);
+
+
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                int[] count=new int[]{0, 0, 0, 0, 0, 0, 0};
+                int[] count = new int[]{0, 0, 0, 0, 0, 0, 0};
+
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {//int position, long id는 클릭된 항목의 id
                     //1. 클릭된 mBusList리스트의 id나 location값으로 클릭된 정류장이름 찾아서  2.php로 보냄
-                    count[position]+=1;//아이템의 클릭 횟수 카운트
+                    count[position] += 1;//아이템의 클릭 횟수 카운트
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
                         if (count[position] > 0) {
 
 
                             if (count[position] >= 2) {
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "이미 예약되었습니다",
-                                        Toast.LENGTH_SHORT
-                                ).show();
+                                customDialog = new CustomDialog(busLine.this,
+                                        "예약하기", // 제목
+                                        "이미 예약되었습니다", // 내용
+                                        leftListener// 왼쪽 버튼 이벤트
+                                       ); // 오른쪽 버튼 이벤트
+                                customDialog.show();
                             } else {
 
                                 if (bellArray[position] >= 1) {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            "이미 예약되었습니다",
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+
+                                    customDialog = new CustomDialog(busLine.this,
+                                            "예약하기", // 제목
+                                            "이미 예약되었습니다", // 내용
+                                            leftListener// 왼쪽 버튼 이벤트
+                                    ); // 오른쪽 버튼 이벤트
+                                    customDialog.show();
 
                                 } else {
-                                    Toast.makeText(
-                                            getApplicationContext(),
-                                            "예약된 정류장: " + clickstop,
-                                            Toast.LENGTH_SHORT
-                                    ).show();
+                                    customDialog = new CustomDialog(busLine.this,
+                                            "예약하기", // 제목
+                                            "예약되었습니다!", // 내용
+                                            leftListener// 왼쪽 버튼 이벤트
+                                    ); // 오른쪽 버튼 이벤트
+                                    customDialog.show();
+
+
                                 }
 
                             }
@@ -284,10 +306,9 @@ public class busLine extends AppCompatActivity {
                             searchBustop.execute(clickstop);
 
                         }
+                    } catch (JSONException e) {
+                        Log.d(TAG, "showResult : ", e);
                     }
-                    catch(JSONException e){
-                            Log.d(TAG, "showResult : ", e);
-                        }
 
 
                 }
@@ -302,7 +323,7 @@ public class busLine extends AppCompatActivity {
     }
 
 
-    private class GetBustop extends AsyncTask<String, Void, String>{
+    private class GetBustop extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
         String errorString = null;
@@ -323,7 +344,7 @@ public class busLine extends AppCompatActivity {
             progressDialog.dismiss();
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
-            clickstop=result;
+            clickstop = result;
         }
 
 
@@ -357,10 +378,9 @@ public class busLine extends AppCompatActivity {
                 Log.d(TAG, "response code - " + responseStatusCode);
 
                 InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
                     inputStream = httpURLConnection.getInputStream();
-                }
-                else{
+                } else {
                     inputStream = httpURLConnection.getErrorStream();
                 }
 
@@ -371,7 +391,7 @@ public class busLine extends AppCompatActivity {
                 StringBuilder sb = new StringBuilder();
                 String line;
 
-                while((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     sb.append(line);
 
                 }
@@ -442,10 +462,11 @@ public class busLine extends AppCompatActivity {
         g.execute(url);
     }
 
-
-
 */
-
+private View.OnClickListener leftListener = new View.OnClickListener() {
+    public void onClick(View v) {
+        customDialog.dismiss();
+    }
+};
 
 }
-

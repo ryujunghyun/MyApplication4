@@ -52,5 +52,7 @@
             android:label="@string/title_activity_custom_dialog"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
 </manifest>

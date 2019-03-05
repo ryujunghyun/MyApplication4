@@ -1,327 +1,247 @@
 package junghyun.myapplication;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Location;
-import android.os.AsyncTask;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.GoogleApi;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import static java.lang.Double.parseDouble;
+import java.lang.reflect.Method;
+import java.util.UUID;
 
-public class bell extends AppCompatActivity implements OnMapReadyCallback {
-/*지연이코드*/
-  private static String TAG = "phpquerytest";
-    private static final String TAG_RESULT="webnautes";
-    private static final String TAG_ID = "id";
-    private static final String TAG_BNAME = "busname";
-    private static final String TAG_SNAME = "bustopname";
+public class bell extends AppCompatActivity {
+    private static final int REQUEST_ENABLE_BT=3; // 요청코드 상수 정의
 
-    private static final String TAG_LONGI = "longitude";
-    private static final String TAG_LATI ="latitude";
-       String myJSON;
-    TextView textview;//버스이름입력
-    EditText editText;//버스이름입력
-  //  Double latitude, longitude;
-    GoogleMap mGoogleMap;
-    Marker marker;
-    Address bestResult;
-    String longitude, latitude, bustopname, busname;
-    /////////////////
+    private BluetoothAdapter btAdapter = null; // 객체선언
 
-    final private int REQUEST_PERMISSIONS_FOR_LAST_KNOWN_LOCATION = 0;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private Location mCurrentLocation;
+
+    private static final String TAG = "bluetooth";
+    final int RECIEVE_MESSAGE = 1;        // Status  for Handler;
+    private BluetoothSocket btSocket = null;
+    private StringBuilder sb = new StringBuilder();
+    private static int flag = 0;
+
+    Button drop, cancel;
+    Handler h;
+
+    private ConnectedThread mConnectedThread;
+
+    // SPP UUID service
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    // MAC-address of Bluetooth module (you must edit this line)
+    private static String address = "20:16:02:30:44:18";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bell);
-        textview =(TextView)findViewById(R.id.busName);
-        editText = (EditText)findViewById(R.id.editBusName);
 
-        Button drop = (Button) findViewById(R.id.drop);
-        Button cancel = (Button) findViewById(R.id.cancel);
+        drop = (Button) findViewById(R.id.drop);
+        cancel = (Button) findViewById(R.id.cancel);
 
-        Button curLoc = (Button) findViewById(R.id.curLoc);
-        curLoc.setOnClickListener(new View.OnClickListener() {//버튼 누르면 현재위치 받아옴
-            @Override
-            public void onClick(View view) {
-                mFusedLocationClient = LocationServices.getFusedLocationProviderClient(bell.this);
-
-                if (!checkLocationPermissions()) {
-                    requestLocationPermissions(REQUEST_PERMISSIONS_FOR_LAST_KNOWN_LOCATION);
-                } else {
-                    getLastLocation();
-                }
-            }
-        });
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.maps);
-        mapFragment.getMapAsync(this);
-     /*   mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        if (!checkLocationPermissions()) {
-            requestLocationPermissions(REQUEST_PERMISSIONS_FOR_LAST_KNOWN_LOCATION);
-        } else {
-            getLastLocation();
+        //기기가 블루투스를 지원하는지 확인
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(btAdapter==null){
+            Toast.makeText(this, "블루투스를 사용할 수 없습니다.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
         }
 
-*/
-        Button showMap = (Button) findViewById(R.id.showMap);
-        showMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               // mBusList.clear()
-                bell.GetName searchBusStop = new bell.GetName();//버스이름얻어
-                searchBusStop.execute(editText.getText().toString());
+        drop = (Button) findViewById(R.id.drop);
+        cancel = (Button) findViewById(R.id.cancel);
+
+        h = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                switch (msg.what) {
+                    case RECIEVE_MESSAGE:
+                        byte[] readBuf = (byte[]) msg.obj;
+                        String strIncom = new String(readBuf, 0, msg.arg1);
+                        sb.append(strIncom);
+                        int endOfLineIndex = sb.indexOf("\r\n");
+                        drop.setEnabled(true);
+                        cancel.setEnabled(true);
+                }
+            }
+        };
+
+        drop.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                mConnectedThread.write("1");
+                //Toast.makeText(getBaseContext(), "Turn on First LED", Toast.LENGTH_SHORT).show();
+            }
+        });
+        cancel.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                mConnectedThread.write("2");
+                //Toast.makeText(getBaseContext(), "Turn on Second LED", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public void onStart(){
+        super.onStart(); //블루투스가 활성화 되어있는지 확인
 
-
-
-    /*지연이코드*/
-    private class GetName extends AsyncTask<String, Void, String> {
-
-        ProgressDialog progressDialog;
-        String errorString = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            progressDialog = ProgressDialog.show(bell.this,
-                    "Please Wait", null, true, true);
+        if(!btAdapter.isEnabled()){
+            Intent enableIntent = new Intent(btAdapter.ACTION_REQUEST_ENABLE); //객체생성
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT); //실행
         }
+    }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch(requestCode){
+            //블루투스 장치를 켜기 위한 요청코드인 경우
+            case REQUEST_ENABLE_BT:
+                //장치 켜짐의 여부에 따라 토스트 메시지 출력
+                if(resultCode== Activity.RESULT_OK){
+                    Toast.makeText(this, "블루투스를 활성화하였습니다.", Toast.LENGTH_LONG).show();
+                    BluetoothDevice device = btAdapter.getRemoteDevice(address);
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+                    Log.d(TAG, "...onResume - try connect...");
+                    try {
+                        btSocket = createBluetoothSocket(device);
+                    } catch (IOException e) {
+                        errorExit("Fatal Error", "In onResume() and socket create failed: " + e.getMessage() + ".");
+                    }
 
-            progressDialog.dismiss();
-            textview.setText(result);
-            Log.d(TAG, "response - " + result);
+                    btAdapter.cancelDiscovery();
 
-            if (result == null){
-                textview.setText(errorString);
-            }
-            else {
-                myJSON = result;
-                showResult();
-            }
-        }
+                    Log.d(TAG, "...Connecting...");
+                    try {
+                        btSocket.connect();
+                        Log.d(TAG, "....Connection ok...");
+                    } catch (IOException e) {
+                        try {
+                            btSocket.close();
+                        } catch (IOException e2) {
+                            errorExit("Fatal Error", "In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
+                        }
+                    }
 
+                    Log.d(TAG, "...Create Socket...");
 
-        @Override
-        protected String doInBackground(String... params) {
+                    mConnectedThread = new ConnectedThread(btSocket);
+                    mConnectedThread.start();
 
-            String searchKeyword = params[0];
-
-            String serverURL = "http://192.168.0.7/bus.php";
-            String postParameters = "busname=" + searchKeyword;
-
-            try {
-
-                URL url = new URL(serverURL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(postParameters.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-
-                int responseStatusCode = httpURLConnection.getResponseCode();
-                Log.d(TAG, "response code - " + responseStatusCode);
-
-                InputStream inputStream;
-                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
                 }
                 else{
-                    inputStream = httpURLConnection.getErrorStream();
+                    onBackPressed();
+                    Toast.makeText(this, "블루투스를 활성화하지 못했습니다.", Toast.LENGTH_LONG).show();
                 }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
 
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-                StringBuilder sb = new StringBuilder();
-                String line;
+        // Set up a pointer to the remote node using it's address.
 
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
+    }
 
-
-                bufferedReader.close();
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
 
-                return sb.toString().trim();
 
 
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+        if(Build.VERSION.SDK_INT >= 10){
+            try {
+                final Method  m = device.getClass().getMethod("createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
+                return (BluetoothSocket) m.invoke(device, MY_UUID);
             } catch (Exception e) {
-
-                Log.d(TAG, "InsertData: Error ", e);
-                errorString = e.toString();
-
-                return null;
+                Log.e(TAG, "Could not create Insecure RFComm Connection",e);
             }
-
         }
-
+        return  device.createRfcommSocketToServiceRecord(MY_UUID);
     }
 
+    private class ConnectedThread extends Thread {
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
 
-    private void showResult(){
-        try {
-            JSONObject jsonObject = new JSONObject(myJSON);
-            JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
+        public ConnectedThread(BluetoothSocket socket) {
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
 
-            for(int i=0;i<busArray.length();i++){
-                JSONObject item = busArray.getJSONObject(i);
-
-               // String id = item.getString(TAG_ID);
-                 busname = item.getString(TAG_BNAME);
-                 bustopname = item.getString(TAG_SNAME);
-                  longitude = item.getString(TAG_LONGI);
-                  latitude = item.getString(TAG_LATI);
-               // longitude=item.getDouble(TAG_LONGI);
-                //latitude=item.getDouble(TAG_LATI);
-
-                HashMap<String,String> BusHashMap = new HashMap<>();
-
-               // BusHashMap.put(TAG_ID, id);
-               BusHashMap.put(TAG_BNAME, busname);
-                BusHashMap.put(TAG_SNAME, bustopname);
-                BusHashMap.put(TAG_LONGI, longitude);
-                BusHashMap.put(TAG_LATI, latitude);
-                getAllMarker();
-            //    mBusList.add(BusHashMap);
+            // Get the input and output streams, using temp objects because
+            // member streams are final
+            try {
+                tmpIn = socket.getInputStream();
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
             }
 
-/*
-            ListAdapter adapter = new SimpleAdapter(
-                    busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_BNAME,TAG_SNAME,TAG_LONGI,TAG_LATI},
-                    new int[]{R.id.id,R.id.busname, R.id.bustopname, R.id.longi,R.id.lati}
-            );
-
-            list.setAdapter(adapter);
-*/
-        } catch (JSONException e) {
-
-            Log.d(TAG, "showResult : ", e);
-        }
-
-    }
-    private boolean checkLocationPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestLocationPermissions(int requestCode) {
-        ActivityCompat.requestPermissions(
-                bell.this,            // bell 액티비티의 객체 인스턴스를 나타냄
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},        // 요청할 권한 목록을 설정한 String 배열
-                requestCode    // 사용자 정의 int 상수. 권한 요청 결과를 받을 때
-        );
-    }
-
-    @SuppressWarnings("MissingPermission")
-    private void getLastLocation() {
-        Task task = mFusedLocationClient.getLastLocation();       // Task<Location> 객체 반환
-        task.addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    mCurrentLocation = location;
-                    LatLng curlocation = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curlocation, 15));
-                    //updateUI();
-                } else
-                    Toast.makeText(getApplicationContext(),
-                            "Unavailable!",
-                            Toast.LENGTH_SHORT)
-                            .show();
-            }
-        });
-    }
-
-    public void onMapReady(GoogleMap googleMap) {//마커표시하는함수
-        mGoogleMap = googleMap;
-     //   LatLng stops = new LatLng(latitude, longitude);
-       // googleMap.addMarker(
-         //       new MarkerOptions().
-           //             position(stops).
-             //           title("한성대학교"));
-        // move the camera
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hansung,15));
-
-    }
-
-    //모든 마커 표시
-    public void getAllMarker(){
-        //bell.GetID searchBusStop = new bell.GetID();//버스아이디얻어
-        //searchBusStop.execute(editText.getText().toString());
-        LatLng stops = new LatLng(parseDouble(latitude), parseDouble(longitude));
-   //     LatLng stops = new LatLng(latitude, longitude);
-        marker=mGoogleMap.addMarker(
-                new MarkerOptions().
-                        position(stops).
-                     title(bustopname).
-                alpha(0.8f));
-            }
-
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
         }
 
 
+        public void run() {
+            byte[] buffer = new byte[256];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs
+            while (true) {
+                try {
+                    // Read from the InputStream
+                    bytes = mmInStream.read(buffer);        // Get number of bytes and message in "buffer"
+                    h.obtainMessage(RECIEVE_MESSAGE, bytes, -1, buffer).sendToTarget();     // Send to message queue Handler
+                } catch (IOException e) {
+                    break;
+                }
+            }
+        }
+
+
+
+        public void write(String message) {
+            Log.d(TAG, "...Data to send: " + message + "...");
+            byte[] msgBuffer = message.getBytes();
+            try {
+                mmOutStream.write(msgBuffer);
+            } catch (IOException e) {
+                Log.d(TAG, "...Error data send: " + e.getMessage() + "...");
+            }
+        }
+    }
+
+    private void checkBTState() {
+        // Check for Bluetooth support and then check to make sure it is turned on
+        // Emulator doesn't support Bluetooth and will return null
+        if(btAdapter==null) {
+            errorExit("Fatal Error", "Bluetooth not support");
+        } else {
+            if (btAdapter.isEnabled()) {
+                Log.d(TAG, "...Bluetooth ON...");
+            } else {
+                //Prompt user to turn on Bluetooth
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+        }
+    }
+
+    private void errorExit(String title, String message){
+        Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
+        finish();
+    }
+}

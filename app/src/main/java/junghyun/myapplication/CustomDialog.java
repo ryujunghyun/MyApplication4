@@ -17,12 +17,10 @@ public class CustomDialog extends Dialog {
     private TextView title;
     private TextView content;
     private Button mPositiveButton;
-    private Button mNegativeButton;
     private String mTitle;
     private String mContent;
 
     private View.OnClickListener mPositiveListener;
-    private View.OnClickListener mNegativeListener;
 
 
     @Override

@@ -8,12 +8,6 @@
     tools:context=".busLine"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        android:text="탑승하신 버스의 번호를 입력해주세요"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +16,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="버스 번호 검색" />
+            android:text="버스 번호" />
 
         <EditText
             android:id="@+id/editBusNum"
@@ -34,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
-            android:text="버스검색" />
+            android:text="검색" />
     </LinearLayout>
 
 
@@ -64,6 +58,28 @@
             android:textSize="15dp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:text="버스 번호"
+            android:id="@+id/bus"/>
+
+        <TextView
+            android:id="@+id/stop"
+            android:layout_width="140dp"
+            android:layout_height="20dp"
+            android:text="정류장" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000"/>
 
 
     <ListView

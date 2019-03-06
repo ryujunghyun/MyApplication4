@@ -9,5 +9,6 @@
     <string name="title_activity_pw_for_realtime">pwForRealtime</string>
     <string name="title_activity_last">LastActivity</string>
     <string name="title_activity_custom_dialog">CustomDialog</string>
+    <string name="title_activity_custom_dialog1">CustomDialog1</string>
 
 </resources>

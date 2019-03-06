@@ -44,11 +44,6 @@ public class busLine extends AppCompatActivity {
     private CustomDialog customDialog;
     int temp; // 임시 전역변수 - singleChoiceItems 에서 선택항목 저장시 사용
 
-    // 다이얼로그의 ID를 보기 좋은 상수로 선언해서 사용한다
-    final int DIALOG_YES = 1;
-    final int DIALOG_NO = 2; // 리스트 형식의 다이얼로그 ID
-    final int DIALOG_BACK = 3;
-
 
     private static String TAG = "phpquerytest";
     private static final String TAG_RESULT = "webnautes";
@@ -64,7 +59,6 @@ public class busLine extends AppCompatActivity {
     String myJSON;
     TextView textview;
     EditText editText;
-    Cursor c;
     String clickstop;
     String reservedstop;
 
@@ -97,6 +91,8 @@ public class busLine extends AppCompatActivity {
         searchBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                textview = (TextView) findViewById(R.id.bus);
+                textview = (TextView) findViewById(R.id.stop);
                 mBusList.clear();
 
                 GetData searchBusLine = new GetData();
@@ -251,8 +247,8 @@ public class busLine extends AppCompatActivity {
             adapter = new SimpleAdapter(
                     // ImageView road = (ImageView)findViewById(R.id.road);
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_BNAME, TAG_SNAME/*,TAG_BELL*/},
-                    new int[]{R.id.id, R.id.busname, R.id.bustopname/*,R.id.bell*/}
+                    new String[]{ TAG_BNAME, TAG_SNAME/*,TAG_BELL*/},
+                    new int[]{R.id.busname, R.id.bustopname/*,R.id.bell*/}
             );
 
             list.setAdapter(adapter);

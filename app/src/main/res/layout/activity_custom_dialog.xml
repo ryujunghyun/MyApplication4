@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/title"
-            android:layout_weight="1"
             android:layout_gravity="center"
+            android:layout_weight="1"
             android:textSize="20dp"
             android:background="@color/colorAccent"
             />
@@ -41,7 +41,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
        >
-
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

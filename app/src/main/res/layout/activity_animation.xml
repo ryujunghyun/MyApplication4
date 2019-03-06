@@ -4,20 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/anim_background"
+    android:background="#ffffff"
     tools:context=".animation">
 
     <ImageView
-        android:id="@+id/bus1"
-        android:layout_width="196dp"
-        android:layout_height="226dp"
-        android:layout_gravity="bottom"
-        android:src="@drawable/bus1" />
+        android:layout_width="400dp"
+        android:layout_height="600dp"
+        android:id="@+id/bus"
+        android:src="@drawable/bus"/>
 
-    <ImageView
-        android:id="@+id/bus2"
-        android:layout_width="181dp"
-        android:layout_height="237dp"
-        android:layout_gravity="bottom"
-        android:src="@drawable/bus2" />
 </LinearLayout>

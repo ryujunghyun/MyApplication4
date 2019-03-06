@@ -13,15 +13,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class animation extends AppCompatActivity {
-ImageView bus1;
-ImageView bus2;
+    ImageView bus1;
+
     int mScreenHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animation);
-       bus1=(ImageView) findViewById(R.id.bus1);
-        bus2 = (ImageView) findViewById(R.id.bus2);
+        bus1=(ImageView) findViewById(R.id.bus);
+
     }
 
     @Override
@@ -53,7 +53,6 @@ ImageView bus2;
     private void startTweenAnimation() {
         android.view.animation.Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim);
         bus1.startAnimation(animation);
-        bus2.startAnimation(animation);
 
         animation.setAnimationListener(animationListener);
     }

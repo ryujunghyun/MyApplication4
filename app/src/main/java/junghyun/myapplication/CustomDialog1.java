@@ -2,6 +2,7 @@ package junghyun.myapplication;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,24 +18,25 @@ import android.widget.TextView;
 
 public class CustomDialog1 extends Dialog implements View.OnClickListener {
     private TextView title;
-    private EditText epassword;
+    public EditText epassword;
+    public EditText ebusNum;
     private Button mPositiveButton;
     private Button mNegativeButton;
-    private String mTitle;
-    private String mPassword;
-    private View.OnClickListener mPositiveListener;
-    private View.OnClickListener mNegativeListener;
-    private CustomDialogListener1 customDialogListener1;
+    public String mTitle;
+    public String mPassword;
+    public View.OnClickListener mPositiveListener;
+    public View.OnClickListener mNegativeListener;
+    public CustomDialogListener1 customDialogListener1;
 
 
 
     //인터페이스 설정
     interface CustomDialogListener1{
-        void onPositiveClicked(String password);
+        void onPositiveClicked(String busNum,String password);
         void onNegativeClicked();
     }
 
-    //호출할 리스너 초기화
+    //액티비티에서호출할 리스너 초기화
     public void setDialogListener(CustomDialogListener1 customDialogListener1){
         this.customDialogListener1 = customDialogListener1;
     }
@@ -53,8 +55,11 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
         setContentView(R.layout.activity_custom_dialog1);
         title=(TextView)findViewById(R.id.title) ;
         epassword=(EditText) findViewById(R.id.password);
+        ebusNum=(EditText) findViewById(R.id.busNum);
+
+
 //제목과 내용은 생성자에서 설정
-        title.setText(mTitle);
+
        // epassword.setText(mPassword);
 
 
@@ -73,9 +78,10 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
             case R.id.pbutton: //확인 버튼을 눌렀을 때
                 //변수에 EidtText에서 가져온 값을 저장
                 String password = epassword.getText().toString();
-
+                String busNum=ebusNum.getText().toString();
                 //인터페이스의 함수를 호출하여 변수에 저장된 값들을 Activity로 전달
-                customDialogListener1.onPositiveClicked(password);
+
+                customDialogListener1.onPositiveClicked(busNum, password);
                 dismiss();
                 break;
             case R.id.nbutton: //취소 버튼을 눌렀을 때
@@ -86,10 +92,10 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
 
 
 
-    public CustomDialog1(@NonNull Context context, String mTitle
+    public CustomDialog1(@NonNull Context context
                         /*String mPassword*/, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
         super(context);
-        this.mTitle=mTitle;
+
    //     this.mPassword=mPassword;
         this.mPositiveListener = positiveListener;
         this.mNegativeListener = negativeListener;

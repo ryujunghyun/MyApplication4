@@ -65,7 +65,7 @@ public class busLine extends AppCompatActivity {
     EditText busnamesearch;
     EditText busidsearch;
     int bellArray[];
-
+    String getbusNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -74,8 +74,16 @@ public class busLine extends AppCompatActivity {
 
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
-        busnamesearch = (EditText) findViewById(R.id.editBusNum);
+      //  busnamesearch = (EditText) findViewById(R.id.editBusNum);
         busidsearch = (EditText) findViewById(R.id.editBusID);
+
+        Intent intent= getIntent();
+        getbusNum=intent.getStringExtra("busNum");
+        if(getbusNum!=null){
+            Log.i("value", "값을 받았습니다: "+getbusNum);
+        //   busNum=intent.getStringExtra("busNum");
+        }
+
 
 
         Button goBusID = (Button) findViewById(R.id.goBusID);
@@ -87,7 +95,11 @@ public class busLine extends AppCompatActivity {
             }
         });
 
-        Button searchBusNum = (Button) findViewById(R.id.searchBusNum);
+        //다이얼로그에서 입력받은값으로 리스트뷰 불러옴
+        GetData searchBusLine = new GetData();
+        searchBusLine.execute(getbusNum);
+
+      /*  Button searchBusNum = (Button) findViewById(R.id.searchBusNum);
         searchBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,14 +107,14 @@ public class busLine extends AppCompatActivity {
                 textview = (TextView) findViewById(R.id.stop);
                 mBusList.clear();
 
-                GetData searchBusLine = new GetData();
+          //      GetData searchBusLine = new GetData();
 
-                searchBusLine.execute(busnamesearch.getText().toString());
-
+            //   searchBusLine.execute(busnamesearch.getText().toString());
+          //      searchBusLine.execute(getbusNum);
                 //  searchBusLine.execute(busnamesearch.getText().toString());
 
             }
-        });
+        });*/
         mBusList = new ArrayList<>();
 
     }

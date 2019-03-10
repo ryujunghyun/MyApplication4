@@ -143,9 +143,8 @@ public class busLine extends AppCompatActivity {
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                Toast.makeText(this, "선택", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "새로고침", Toast.LENGTH_SHORT).show();
 //db내용 불러오고 노티파이
-//
                 list=(ListView)findViewById(R.id.listView1);
                 GetData searchBusLine = new GetData();
                 searchBusLine.execute(getbusNum);
@@ -196,7 +195,7 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            String serverURL = "http://172.30.7.215/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {
@@ -265,13 +264,21 @@ public class busLine extends AppCompatActivity {
             HashMap<String, Integer> BellHashMap = new HashMap<>();
             bellArray = new int[7];
 
+
             for (int i = 0; i < busArray.length(); i++) {
                 JSONObject item = busArray.getJSONObject(i);
                 String id = item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
-                //int bell=item.getInt(TAG_BELL);
-                String bell = String.valueOf(item.getInt(TAG_BELL));
+                int bell1=item.getInt(TAG_BELL);
+                String bell;
+                if(item.getInt(TAG_BELL)==1){
+                    bell="예약되어있습니다";
+                }else{
+                    bell=" ";
+                }
+            //    String bell = String.valueOf(item.getInt(TAG_BELL));//int형bell을 list에 나타내기 위해 string로 변환
+
                 Log.i("여기보삼", "호"+bell);
                 BusHashMap = new HashMap<>();
                 //     BellHashMap=new HashMap<>();
@@ -280,14 +287,11 @@ public class busLine extends AppCompatActivity {
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
                 BusHashMap.put(TAG_BELL, bell);
-             //   BellHashMap.put(TAG_BELL, bell);
+                BellHashMap.put(TAG_BELL, bell1);
 
-               // bellArray[i] = BellHashMap.get(TAG_BELL);
+                bellArray[i] = BellHashMap.get(TAG_BELL);
                 //Log.i("벨해쉬멥", "벨값"+BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
-
-
                 mBusList.add(BusHashMap);
-
 
             }
 
@@ -308,7 +312,7 @@ public class busLine extends AppCompatActivity {
                     busLine.this, mBusList, R.layout.list_item,
                     new String[]{TAG_BNAME, TAG_SNAME, TAG_BELL},
                     new int[]{R.id.busname, R.id.bustopname, R.id.bell}
-                    );//여기에 bell=1이면 이미지 정착
+                    );//여기에 bell=1인걸 따로 표시하는 방법 생각
 
             list.setAdapter(adapter);
            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -349,8 +353,8 @@ public class busLine extends AppCompatActivity {
                                     customDialog = new CustomDialog(busLine.this,
                                             "예약하기", // 제목
                                             "예약되었습니다!", // 내용
-                                            leftListener// 왼쪽 버튼 이벤트
-                                    ); // 오른쪽 버튼 이벤트
+                                            rightListener// 오른쪽 버튼 이벤트
+                                    ); 
                                     customDialog.show();
 
 
@@ -408,7 +412,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://172.30.7.215/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -523,5 +527,16 @@ private View.OnClickListener leftListener = new View.OnClickListener() {
         customDialog.dismiss();
     }
 };
+    private View.OnClickListener rightListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            list=(ListView)findViewById(R.id.listView1);
+            GetData searchBusLine = new GetData();
+            searchBusLine.execute(getbusNum);
+
+            mBusList = new ArrayList<>();
+            customDialog.dismiss();
+        }
+    };
+
 
 }

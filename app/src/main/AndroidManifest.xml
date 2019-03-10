@@ -18,11 +18,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAwebxWaGkixL9nBQ_rczQjAfbd_RBh3yk" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+
+            />
         <activity
             android:name=".busLine"
             android:label="@string/title_activity_bus_line"
-            android:parentActivityName=".busPW" />
+            android:parentActivityName=".busPW"
+            />
         <activity
             android:name=".busPW"
             android:label="@string/title_activity_bus_pw"
@@ -56,6 +59,10 @@
         <activity
             android:name=".CustomDialog1"
             android:label="@string/title_activity_custom_dialog1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Titlebar"
+            android:label="@string/title_activity_titlebar"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

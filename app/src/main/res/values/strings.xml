@@ -10,5 +10,6 @@
     <string name="title_activity_last">LastActivity</string>
     <string name="title_activity_custom_dialog">CustomDialog</string>
     <string name="title_activity_custom_dialog1">CustomDialog1</string>
+    <string name="title_activity_titlebar">Titlebar</string>
 
 </resources>

@@ -8,8 +8,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -40,7 +47,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.view.Window.FEATURE_CUSTOM_TITLE;
+
 public class busLine extends AppCompatActivity {
+
+
     private CustomDialog customDialog;
     int temp; // 임시 전역변수 - singleChoiceItems 에서 선택항목 저장시 사용
 
@@ -66,11 +77,16 @@ public class busLine extends AppCompatActivity {
     EditText busidsearch;
     int bellArray[];
     String getbusNum;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_line);
+
 
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
@@ -119,6 +135,32 @@ public class busLine extends AppCompatActivity {
 
     }
 
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                Toast.makeText(this, "선택", Toast.LENGTH_SHORT).show();
+//db내용 불러오고 노티파이
+//
+                list=(ListView)findViewById(R.id.listView1);
+                GetData searchBusLine = new GetData();
+                searchBusLine.execute(getbusNum);
+
+                mBusList = new ArrayList<>();
+
+
+                //    adapter.notifyDataSetChanged();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     private class GetData extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -144,6 +186,7 @@ public class busLine extends AppCompatActivity {
                 textview.setText(errorString);
             } else {
                 myJSON = result;
+
                 showResult();
             }
         }
@@ -153,7 +196,7 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://172.30.7.215/bus.php";
             String postParameters = "busname=" + searchKeyword;
 
             try {
@@ -227,23 +270,27 @@ public class busLine extends AppCompatActivity {
                 String id = item.getString(TAG_ID);
                 String busname = item.getString(TAG_BNAME);
                 String bustopname = item.getString(TAG_SNAME);
-                int bell = item.getInt(TAG_BELL);
-
+                //int bell=item.getInt(TAG_BELL);
+                String bell = String.valueOf(item.getInt(TAG_BELL));
+                Log.i("여기보삼", "호"+bell);
                 BusHashMap = new HashMap<>();
                 //     BellHashMap=new HashMap<>();
 
                 BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_SNAME, bustopname);
-                //   BusHashMap.put(TAG_BELL, bell);
-                BellHashMap.put(TAG_BELL, bell);
-                bellArray[i] = BellHashMap.get(TAG_BELL);
+                BusHashMap.put(TAG_BELL, bell);
+             //   BellHashMap.put(TAG_BELL, bell);
+
+               // bellArray[i] = BellHashMap.get(TAG_BELL);
                 //Log.i("벨해쉬멥", "벨값"+BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
 
 
                 mBusList.add(BusHashMap);
 
+
             }
+
             for (int i = 0; i < busArray.length(); i++) {
                 Log.i("벨해쉬멥", "벨값" + BellHashMap.get(TAG_BELL));//BellHashMap에는 벨값 제대로 저장됨
             }
@@ -259,9 +306,9 @@ public class busLine extends AppCompatActivity {
             adapter = new SimpleAdapter(
                     // ImageView road = (ImageView)findViewById(R.id.road);
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{ TAG_BNAME, TAG_SNAME/*,TAG_BELL*/},
-                    new int[]{R.id.busname, R.id.bustopname/*,R.id.bell*/}
-            );
+                    new String[]{TAG_BNAME, TAG_SNAME, TAG_BELL},
+                    new int[]{R.id.busname, R.id.bustopname, R.id.bell}
+                    );//여기에 bell=1이면 이미지 정착
 
             list.setAdapter(adapter);
            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -361,7 +408,7 @@ public class busLine extends AppCompatActivity {
 
             String searchKeyword = params[0];
 
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://172.30.7.215/bus.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -421,10 +468,10 @@ public class busLine extends AppCompatActivity {
 
         }
 
+
+
+
     }
-
-
-
 
 
 /*

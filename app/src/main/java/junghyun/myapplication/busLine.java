@@ -51,16 +51,15 @@ import static android.view.Window.FEATURE_CUSTOM_TITLE;
 
 public class busLine extends AppCompatActivity {
 
-
     private CustomDialog customDialog;
     int temp; // 임시 전역변수 - singleChoiceItems 에서 선택항목 저장시 사용
-
 
     private static String TAG = "phpquerytest";
     private static final String TAG_RESULT = "webnautes";
     private static final String TAG_ID = "id";
     private static final String TAG_BNAME = "busname";
     private static final String TAG_SNAME = "bustopname";
+    private static final String TAG_BUSID = "busid";
     private static final String TAG_BELL = "bell";
     private static final String TAG_ROAD = "road";
 
@@ -74,12 +73,12 @@ public class busLine extends AppCompatActivity {
     String reservedstop;
 
     EditText busnamesearch;
-    EditText busidsearch;
+    EditText ebuspassword;
     int bellArray[];
+    int busid[];
     String getbusNum;
-
-
-
+    String getbusid;
+    String getpassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,47 +90,33 @@ public class busLine extends AppCompatActivity {
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
       //  busnamesearch = (EditText) findViewById(R.id.editBusNum);
-        busidsearch = (EditText) findViewById(R.id.editBusID);
+
 
         Intent intent= getIntent();
-        getbusNum=intent.getStringExtra("busNum");
-        if(getbusNum!=null){
-            Log.i("value", "값을 받았습니다: "+getbusNum);
+        getbusNum=intent.getStringExtra("busNum");//////////////////////////main에서 인텐트로 받은 버스 번호
+        getbusid=intent.getStringExtra("busid");
+        getpassword=intent.getStringExtra("password");
+        if(getbusNum!=null && getbusid!=null && getpassword!=null){
+            Log.i("value", "값을 받았습니다: "+getbusNum+" id값을 받았습니다. "+getbusid+" 비밀번호: "+getpassword);
         //   busNum=intent.getStringExtra("busNum");
+
         }
 
 
 
-        Button goBusID = (Button) findViewById(R.id.goBusID);
+     /*   Button goBusID = (Button) findViewById(R.id.getList);
         goBusID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {//다음화면으로
                 Intent intent = new Intent(getApplicationContext(), LastActivity.class);
                 startActivity(intent);
             }
-        });
-
-        //다이얼로그에서 입력받은값으로 리스트뷰 불러옴
-        GetData searchBusLine = new GetData();
-        searchBusLine.execute(getbusNum);
-
-      /*  Button searchBusNum = (Button) findViewById(R.id.searchBusNum);
-        searchBusNum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textview = (TextView) findViewById(R.id.bus);
-                textview = (TextView) findViewById(R.id.stop);
-                mBusList.clear();
-
-          //      GetData searchBusLine = new GetData();
-
-            //   searchBusLine.execute(busnamesearch.getText().toString());
-          //      searchBusLine.execute(getbusNum);
-                //  searchBusLine.execute(busnamesearch.getText().toString());
-
-            }
         });*/
-        mBusList = new ArrayList<>();
+
+        //다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴////////////////////////////////////////////////////////////////////////////////
+        GetData searchBusLine = new GetData();
+       searchBusLine.execute(getbusNum, getbusid, getpassword);
+       mBusList = new ArrayList<>();
 
     }
 
@@ -144,13 +129,11 @@ public class busLine extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 Toast.makeText(this, "새로고침", Toast.LENGTH_SHORT).show();
-//db내용 불러오고 노티파이
+                //db내용 불러오고 노티파이
                 list=(ListView)findViewById(R.id.listView1);
                 GetData searchBusLine = new GetData();
-                searchBusLine.execute(getbusNum);
-
+                searchBusLine.execute(getbusNum, getbusid, getpassword);
                 mBusList = new ArrayList<>();
-
 
                 //    adapter.notifyDataSetChanged();
                 return true;
@@ -161,10 +144,8 @@ public class busLine extends AppCompatActivity {
     }
 
     private class GetData extends AsyncTask<String, Void, String> {
-
         ProgressDialog progressDialog;
         String errorString = null;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -172,15 +153,12 @@ public class busLine extends AppCompatActivity {
             progressDialog = ProgressDialog.show(busLine.this,
                     "Please Wait", null, true, true);
         }
-
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             progressDialog.dismiss();
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
-
             if (result == null) {
                 textview.setText(errorString);
             } else {
@@ -190,19 +168,17 @@ public class busLine extends AppCompatActivity {
             }
         }
 
-
         @Override
         protected String doInBackground(String... params) {
-
-            String searchKeyword = params[0];
+            String busname = (String)params[0];
+            String busid=(String)params[1];
+            String password=(String)params[2];
             String serverURL = "http://192.168.0.7/bus.php";
-            String postParameters = "busname=" + searchKeyword;
+            String postParameters = "busname=" + busname + "&busid=" + busid + "&password="+password;
 
             try {
-
                 URL url = new URL(serverURL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
 
                 httpURLConnection.setReadTimeout(5000);
                 httpURLConnection.setConnectTimeout(5000);
@@ -213,6 +189,7 @@ public class busLine extends AppCompatActivity {
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
+
                 outputStream.flush();
                 outputStream.close();
 
@@ -238,7 +215,6 @@ public class busLine extends AppCompatActivity {
                     sb.append(line);
                 }
 
-
                 bufferedReader.close();
 
 
@@ -258,7 +234,7 @@ public class busLine extends AppCompatActivity {
 
     private void showResult() {
         try {
-            final JSONObject jsonObject = new JSONObject(myJSON);
+            final JSONObject jsonObject = new JSONObject(myJSON);//////////서버에서 변수는 받았지만 디비값들을 못불러옴
             final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
             HashMap<String, String> BusHashMap;
             HashMap<String, Integer> BellHashMap = new HashMap<>();
@@ -266,27 +242,32 @@ public class busLine extends AppCompatActivity {
 
 
             for (int i = 0; i < busArray.length(); i++) {
-                JSONObject item = busArray.getJSONObject(i);
-                String id = item.getString(TAG_ID);
+               JSONObject item = busArray.getJSONObject(i);
+
                 String busname = item.getString(TAG_BNAME);
+                String busid=item.getString(TAG_BUSID);
                 String bustopname = item.getString(TAG_SNAME);
-                int bell1=item.getInt(TAG_BELL);
+              int bell1=item.getInt(TAG_BELL);
                 String bell;
-                if(item.getInt(TAG_BELL)==1){
-                    bell="예약되어있습니다";
+               if(item.getInt(TAG_BELL)==1){
+                    bell="예약";
                 }else{
                     bell=" ";
                 }
             //    String bell = String.valueOf(item.getInt(TAG_BELL));//int형bell을 list에 나타내기 위해 string로 변환
 
-                Log.i("여기보삼", "호"+bell);
                 BusHashMap = new HashMap<>();
                 //     BellHashMap=new HashMap<>();
 
-                BusHashMap.put(TAG_ID, id);
+          //      BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
+                BusHashMap.put(TAG_BUSID, busid);
                 BusHashMap.put(TAG_SNAME, bustopname);
                 BusHashMap.put(TAG_BELL, bell);
+
+
+                busid=BusHashMap.get(TAG_BUSID);
+                Log.i(" 아이디: ", busid);
                 BellHashMap.put(TAG_BELL, bell1);
 
                 bellArray[i] = BellHashMap.get(TAG_BELL);
@@ -310,8 +291,8 @@ public class busLine extends AppCompatActivity {
             adapter = new SimpleAdapter(
                     // ImageView road = (ImageView)findViewById(R.id.road);
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_BNAME, TAG_SNAME, TAG_BELL},
-                    new int[]{R.id.busname, R.id.bustopname, R.id.bell}
+                    new String[]{TAG_BNAME,TAG_BUSID, TAG_SNAME, TAG_BELL},
+                    new int[]{R.id.busname,R.id.busid, R.id.bustopname, R.id.bell}
                     );//여기에 bell=1인걸 따로 표시하는 방법 생각
 
             list.setAdapter(adapter);
@@ -329,8 +310,6 @@ public class busLine extends AppCompatActivity {
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
                         if (count[position] > 0) {
-
-
                             if (count[position] >= 2) {
                                 customDialog = new CustomDialog(busLine.this,
                                         "예약하기", // 제목
@@ -354,15 +333,14 @@ public class busLine extends AppCompatActivity {
                                             "예약하기", // 제목
                                             "예약되었습니다!", // 내용
                                             rightListener// 오른쪽 버튼 이벤트
-                                    ); 
+                                    );
                                     customDialog.show();
-
-
                                 }
 
                             }
                             GetBustop searchBustop = new GetBustop();
                             searchBustop.execute(clickstop);
+
 
                         }
                     } catch (JSONException e) {
@@ -383,14 +361,11 @@ public class busLine extends AppCompatActivity {
 
 
     private class GetBustop extends AsyncTask<String, Void, String> {
-
         ProgressDialog progressDialog;
         String errorString = null;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressDialog = ProgressDialog.show(busLine.this,
                     "Please Wait", null, true, true);
         }
@@ -411,6 +386,7 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
+
 
             String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
@@ -442,8 +418,6 @@ public class busLine extends AppCompatActivity {
                 } else {
                     inputStream = httpURLConnection.getErrorStream();
                 }
-
-
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
@@ -454,89 +428,30 @@ public class busLine extends AppCompatActivity {
                     sb.append(line);
 
                 }
-
-
                 bufferedReader.close();
-
-
                 return sb.toString().trim();
-
-
             } catch (Exception e) {
-
                 Log.d(TAG, "InsertData: Error ", e);
                 errorString = e.toString();
-
                 return null;
             }
-
         }
-
-
-
-
     }
 
 
-/*
-    public void getData(String url) {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                String searchKeyword = params[0];
-                String postParameters = "busname = " + searchKeyword;
-
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(searchKeyword);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    String json;
-                    while ((json = bufferedReader.readLine()) != null) {
-                        sb.append(json + "\n");
-                    }
-
-                    return sb.toString().trim();
-
-                } catch (Exception e) {
-                    return null;
-                }
-
-
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                myJSON = result;
-                showList();
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute(url);
-    }
-
-*/
 private View.OnClickListener leftListener = new View.OnClickListener() {
     public void onClick(View v) {
-        customDialog.dismiss();
+        customDialog.dismiss();//
     }
 };
     private View.OnClickListener rightListener = new View.OnClickListener() {
         public void onClick(View v) {
             list=(ListView)findViewById(R.id.listView1);
             GetData searchBusLine = new GetData();
-            searchBusLine.execute(getbusNum);
+            searchBusLine.execute(getbusNum, getbusid, getpassword);
 
             mBusList = new ArrayList<>();
             customDialog.dismiss();
         }
     };
-
-
 }

@@ -22,6 +22,18 @@
         android:padding="5dp"
     />
 
+
+        <TextView
+            android:id="@+id/busid"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:textStyle="bold"
+            android:textColor="#33aabb"
+            android:textSize="30dp"
+            />
     <TextView
         android:id="@+id/bustopname"
         android:layout_width="100dp"
@@ -36,9 +48,10 @@
 
         <TextView
             android:id="@+id/bell"
-            android:layout_width="130dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:textStyle="bold"
+            android:textColor="@color/blue"
             android:textSize="15dp"
             />
     </LinearLayout>

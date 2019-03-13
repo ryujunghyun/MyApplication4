@@ -60,10 +60,7 @@
             android:name=".CustomDialog1"
             android:label="@string/title_activity_custom_dialog1"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Titlebar"
-            android:label="@string/title_activity_titlebar"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+
     </application>
 
 </manifest>

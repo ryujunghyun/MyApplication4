@@ -14,25 +14,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="버스 ID 검색" />
 
-        <EditText
-            android:id="@+id/editBusID"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.6"
-            android:layout_height="wrap_content" />
-
-
-        <Button
-            android:id="@+id/goBusID"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.2"
-            android:text="다음화면으로"
-            android:textSize="15dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,6 +28,12 @@
             android:layout_marginLeft="5dp"
             android:text="버스 번호"
             android:id="@+id/bus"/>
+
+        <TextView
+            android:id="@+id/busid"
+            android:layout_width="140dp"
+            android:layout_height="20dp"
+            android:text="버스식별자" />
 
         <TextView
             android:id="@+id/stop"

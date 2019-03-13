@@ -18,8 +18,9 @@ import android.widget.TextView;
 
 public class CustomDialog1 extends Dialog implements View.OnClickListener {
     private TextView title;
-    public EditText epassword;
+    public EditText ebusid;
     public EditText ebusNum;
+    public EditText epassword;
     private Button mPositiveButton;
     private Button mNegativeButton;
     public String mTitle;
@@ -32,7 +33,7 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
 
     //인터페이스 설정
     interface CustomDialogListener1{
-        void onPositiveClicked(String busNum,String password);
+        void onPositiveClicked(String busNum,String busid, String password);
         void onNegativeClicked();
     }
 
@@ -54,8 +55,9 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
 
         setContentView(R.layout.activity_custom_dialog1);
         title=(TextView)findViewById(R.id.title) ;
-        epassword=(EditText) findViewById(R.id.password);
+        ebusid=(EditText) findViewById(R.id.busid);
         ebusNum=(EditText) findViewById(R.id.busNum);
+        epassword=(EditText)findViewById(R.id.password);
 
 
 //제목과 내용은 생성자에서 설정
@@ -77,11 +79,12 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
         switch (v.getId()){
             case R.id.pbutton: //확인 버튼을 눌렀을 때
                 //변수에 EidtText에서 가져온 값을 저장
-                String password = epassword.getText().toString();
+                String busid = ebusid.getText().toString();
                 String busNum=ebusNum.getText().toString();
+                String password=epassword.getText().toString();
                 //인터페이스의 함수를 호출하여 변수에 저장된 값들을 Activity로 전달
 
-                customDialogListener1.onPositiveClicked(busNum, password);
+                customDialogListener1.onPositiveClicked(busNum, busid, password);
                 dismiss();
                 break;
             case R.id.nbutton: //취소 버튼을 눌렀을 때

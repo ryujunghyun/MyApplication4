@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
                 <TextView
-                    android:text="버스번호와 비밀번호를 입력하세요"
+                    android:text="버스번호와 아이디를 입력하세요"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:id="@+id/title"
@@ -49,13 +49,23 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="비밀번호: "/>
+                            android:text="아이디: "/>
                         <EditText
                             android:layout_width="100dp"
                           android:layout_height="60dp"
-                           android:id="@+id/password"
+                           android:id="@+id/busid"
                            android:layout_weight="1"
                            />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="비밀번호: "/>
+                    <EditText
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/password"
+                        android:layout_weight="1"
+                        />
                 </LinearLayout>
         </LinearLayout>
 

@@ -366,7 +366,7 @@ public class busLine extends AppCompatActivity {
             customDialog = new CustomDialog(busLine.this,
                     "데이터를 불러올 수 없습니다.", // 제목
                     "정보를 다시 입력해주세요", // 내용
-                    middleListener// 미들 이벤트
+                    errorListener// 미들 이벤트
             );
             customDialog.show();
 
@@ -463,7 +463,7 @@ private View.OnClickListener leftListener = new View.OnClickListener() {
         customDialog.dismiss();//
     }
 };
-    private View.OnClickListener middleListener = new View.OnClickListener() {
+    private View.OnClickListener errorListener = new View.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);

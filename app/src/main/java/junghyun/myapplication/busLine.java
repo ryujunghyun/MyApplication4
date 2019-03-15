@@ -71,7 +71,7 @@ public class busLine extends AppCompatActivity {
     EditText editText;
     String clickstop;
     String reservedstop;
-
+    String bell;
     EditText busnamesearch;
     EditText ebuspassword;
     int bellArray[];
@@ -89,20 +89,18 @@ public class busLine extends AppCompatActivity {
 
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
-      //  busnamesearch = (EditText) findViewById(R.id.editBusNum);
+        //  busnamesearch = (EditText) findViewById(R.id.editBusNum);
 
 
-        Intent intent= getIntent();
-        getbusNum=intent.getStringExtra("busNum");//////////////////////////main에서 인텐트로 받은 버스 번호
-        getbusid=intent.getStringExtra("busid");
-        getpassword=intent.getStringExtra("password");
-        if(getbusNum!=null && getbusid!=null && getpassword!=null){
-            Log.i("value", "값을 받았습니다: "+getbusNum+" id값을 받았습니다. "+getbusid+" 비밀번호: "+getpassword);
-        //   busNum=intent.getStringExtra("busNum");
+        Intent intent = getIntent();
+        getbusNum = intent.getStringExtra("busNum");//////////////////////////main에서 인텐트로 받은 버스 번호
+        getbusid = intent.getStringExtra("busid");
+        getpassword = intent.getStringExtra("password");
+        if (getbusNum != null && getbusid != null && getpassword != null) {
+            Log.i("value", "값을 받았습니다: " + getbusNum + " id값을 받았습니다. " + getbusid + " 비밀번호: " + getpassword);
+            //   busNum=intent.getStringExtra("busNum");
 
         }
-
-
 
      /*   Button goBusID = (Button) findViewById(R.id.getList);
         goBusID.setOnClickListener(new View.OnClickListener() {
@@ -113,24 +111,27 @@ public class busLine extends AppCompatActivity {
             }
         });*/
 
-        //다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴////////////////////////////////////////////////////////////////////////////////
+        /*다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴*/
         GetData searchBusLine = new GetData();
-       searchBusLine.execute(getbusNum, getbusid, getpassword);
-       mBusList = new ArrayList<>();
+        searchBusLine.execute(getbusNum, getbusid, getpassword);
+        mBusList = new ArrayList<>();
 
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
                 Toast.makeText(this, "새로고침", Toast.LENGTH_SHORT).show();
                 //db내용 불러오고 노티파이
-                list=(ListView)findViewById(R.id.listView1);
+                list = (ListView) findViewById(R.id.listView1);
                 GetData searchBusLine = new GetData();
                 searchBusLine.execute(getbusNum, getbusid, getpassword);
                 mBusList = new ArrayList<>();
@@ -146,6 +147,7 @@ public class busLine extends AppCompatActivity {
     private class GetData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
         String errorString = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -153,6 +155,7 @@ public class busLine extends AppCompatActivity {
             progressDialog = ProgressDialog.show(busLine.this,
                     "Please Wait", null, true, true);
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -168,13 +171,14 @@ public class busLine extends AppCompatActivity {
             }
         }
 
+
         @Override
         protected String doInBackground(String... params) {
-            String busname = (String)params[0];
-            String busid=(String)params[1];
-            String password=(String)params[2];
-            String serverURL = "http://192.168.0.7/bus.php";
-            String postParameters = "busname=" + busname + "&busid=" + busid + "&password="+password;
+            String busname = (String) params[0];
+            String busid = (String) params[1];
+            String password = (String) params[2];
+            String serverURL = "http://172.30.1.47/bus.php";
+            String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
                 URL url = new URL(serverURL);
@@ -234,6 +238,7 @@ public class busLine extends AppCompatActivity {
 
     private void showResult() {
         try {
+            Log.i("myJSON 값: ", "myJSON값: " + myJSON);
             final JSONObject jsonObject = new JSONObject(myJSON);//////////서버에서 변수는 받았지만 디비값들을 못불러옴
             final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
             HashMap<String, String> BusHashMap;
@@ -242,31 +247,35 @@ public class busLine extends AppCompatActivity {
 
 
             for (int i = 0; i < busArray.length(); i++) {
-               JSONObject item = busArray.getJSONObject(i);
+                JSONObject item = busArray.getJSONObject(i);
 
                 String busname = item.getString(TAG_BNAME);
-                String busid=item.getString(TAG_BUSID);
+                String busid = item.getString(TAG_BUSID);
                 String bustopname = item.getString(TAG_SNAME);
-              int bell1=item.getInt(TAG_BELL);
-                String bell;
-               if(item.getInt(TAG_BELL)==1){
-                    bell="예약";
-                }else{
-                    bell=" ";
+                int bell1 = item.getInt(TAG_BELL);
+
+                if (item.getInt(TAG_BELL) == 1) {
+                    bell = "예약";
+                } else {
+                    bell = " ";
                 }
-            //    String bell = String.valueOf(item.getInt(TAG_BELL));//int형bell을 list에 나타내기 위해 string로 변환
+                /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기
+                 * GetData에서 할지 GetBustop에서 할지 결정하기
+                 * */
+
+                //    String bell = String.valueOf(item.getInt(TAG_BELL));//int형bell을 list에 나타내기 위해 string로 변환
 
                 BusHashMap = new HashMap<>();
                 //     BellHashMap=new HashMap<>();
 
-          //      BusHashMap.put(TAG_ID, id);
+                //      BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_BUSID, busid);
                 BusHashMap.put(TAG_SNAME, bustopname);
                 BusHashMap.put(TAG_BELL, bell);
 
 
-                busid=BusHashMap.get(TAG_BUSID);
+                busid = BusHashMap.get(TAG_BUSID);
                 Log.i(" 아이디: ", busid);
                 BellHashMap.put(TAG_BELL, bell1);
 
@@ -291,12 +300,12 @@ public class busLine extends AppCompatActivity {
             adapter = new SimpleAdapter(
                     // ImageView road = (ImageView)findViewById(R.id.road);
                     busLine.this, mBusList, R.layout.list_item,
-                    new String[]{TAG_BNAME,TAG_BUSID, TAG_SNAME, TAG_BELL},
-                    new int[]{R.id.busname,R.id.busid, R.id.bustopname, R.id.bell}
-                    );//여기에 bell=1인걸 따로 표시하는 방법 생각
+                    new String[]{TAG_BNAME, TAG_BUSID, TAG_SNAME, TAG_BELL},
+                    new int[]{R.id.busname, R.id.busid, R.id.bustopname, R.id.bell}
+            );//여기에 bell=1인걸 따로 표시하는 방법 생각
 
             list.setAdapter(adapter);
-           final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this);
 
 
@@ -315,7 +324,7 @@ public class busLine extends AppCompatActivity {
                                         "예약하기", // 제목
                                         "이미 예약되었습니다", // 내용
                                         leftListener// 왼쪽 버튼 이벤트
-                                       ); // 오른쪽 버튼 이벤트
+                                ); // 오른쪽 버튼 이벤트
                                 customDialog.show();
                             } else {
 
@@ -353,6 +362,13 @@ public class busLine extends AppCompatActivity {
             list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);//리스트 하나만 선택하도록 하는거*/
 
         } catch (JSONException e) {
+            /*입력한 정보가 하나라도 틀리거나 null일 경우*/
+            customDialog = new CustomDialog(busLine.this,
+                    "데이터를 불러올 수 없습니다.", // 제목
+                    "정보를 다시 입력해주세요", // 내용
+                    middleListener// 미들 이벤트
+            );
+            customDialog.show();
 
             Log.d(TAG, "showResult : ", e);
         }
@@ -363,6 +379,7 @@ public class busLine extends AppCompatActivity {
     private class GetBustop extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
         String errorString = null;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -388,7 +405,7 @@ public class busLine extends AppCompatActivity {
             String searchKeyword = params[0];
 
 
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://172.30.1.47/bus.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -439,18 +456,35 @@ public class busLine extends AppCompatActivity {
     }
 
 
+
+
 private View.OnClickListener leftListener = new View.OnClickListener() {
     public void onClick(View v) {
         customDialog.dismiss();//
     }
 };
+    private View.OnClickListener middleListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            //customDialog.dismiss();//
+        }
+    };
     private View.OnClickListener rightListener = new View.OnClickListener() {
         public void onClick(View v) {
-            list=(ListView)findViewById(R.id.listView1);
+           list=(ListView)findViewById(R.id.listView1);
             GetData searchBusLine = new GetData();
-            searchBusLine.execute(getbusNum, getbusid, getpassword);
+        searchBusLine.execute(getbusNum, getbusid, getpassword);
+     /*       showResult();
+            adapter = new SimpleAdapter(
+                    // ImageView road = (ImageView)findViewById(R.id.road);
+                    busLine.this, mBusList, R.layout.list_item,
+                    new String[]{TAG_BNAME, TAG_BUSID, TAG_SNAME, TAG_BELL},
+                    new int[]{R.id.busname, R.id.busid, R.id.bustopname, R.id.bell}
+            );//여기에 bell=1인걸 따로 표시하는 방법 생각
 
-            mBusList = new ArrayList<>();
+            list.setAdapter(adapter);*/
+           mBusList = new ArrayList<>();
             customDialog.dismiss();
         }
     };

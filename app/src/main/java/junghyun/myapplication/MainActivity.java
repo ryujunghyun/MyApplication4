@@ -73,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
                         ebusNum=((EditText)customDialog1.findViewById(R.id.busNum));
                         ebusid=((EditText)customDialog1.findViewById(R.id.busid));
                         ebuspassword=((EditText)customDialog1.findViewById(R.id.password));
-                        if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
+                       // if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
+                    //    if(ebusNum!=null && ebusid!=null && ebuspassword!=null){
+                        if(ebusNum.getText().toString()!=" " && ebusid.getText().toString()!=""&& ebuspassword.getText().toString()!=""){
                             tobusNum = ebusNum.getText().toString();
                             tobusid = ebusid.getText().toString();
                             topassword = ebuspassword.getText().toString();

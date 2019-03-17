@@ -11,5 +11,6 @@
     <string name="title_activity_custom_dialog">CustomDialog</string>
     <string name="title_activity_custom_dialog1">CustomDialog1</string>
     <string name="title_activity_titlebar">Titlebar</string>
+    <string name="title_activity_custom_ddialog2">CustomDDialog2</string>
 
 </resources>

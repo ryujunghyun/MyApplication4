@@ -179,7 +179,7 @@ String alarm_bell="1";
             String busname = (String) params[0];
             String busid = (String) params[1];
             String password = (String) params[2];
-            String serverURL = "http://223.194.132.35/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
@@ -325,7 +325,7 @@ String alarm_bell="1";
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
                         if (count[position] > 0) {//클릭 발생시
-                           if (count[position] >= 2) {
+                           if (count[position] >= 2) {//2번 클릭한 사용자는 알림을 수신할 필요 x
                                 customDialog = new CustomDialog(busLine.this,
                                         "예약하기", // 제목
                                         "이미 예약되었습니다", // 내용
@@ -334,8 +334,9 @@ String alarm_bell="1";
                                 customDialog.show();
                             } else
 
-                                if (bellArray[position] >= 1) {
-
+                                if (bellArray[position] >= 1) {//한 번 클릭하면 알림 수신 가능
+                                  /*  GetAlarm alarm = new GetAlarm();
+                                    alarm.execute(clickstop);*/
                                     customDialog = new CustomDialog(busLine.this,
                                             "예약하기", // 제목
                                             "예약되었습니다", // 내용
@@ -352,8 +353,7 @@ String alarm_bell="1";
                                     customDialog.show();
                                     GetBustop searchBustop = new GetBustop();
                                     searchBustop.execute(clickstop);
-                                    GetAlarm alarm = new GetAlarm();
-                                    alarm.execute(clickstop);
+
                                 }
 
                            //}
@@ -417,6 +417,7 @@ String alarm_bell="1";
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
             clickstop = result;
+            showResult2();
 
         }
 
@@ -427,7 +428,7 @@ String alarm_bell="1";
             String searchKeyword = params[0];
  /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
 //alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://223.194.132.35/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
 
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
@@ -514,7 +515,7 @@ String alarm_bell="1";
             String searchKeyword = params[0];
             /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
 //alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://223.194.132.35/posupdate.php";
+            String serverURL = "http://192.168.0.7/posupdate.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -565,10 +566,11 @@ String alarm_bell="1";
     private void showResult2() {
         try {
             final JSONObject jsonObject1 = new JSONObject(clickstop);//////////서버에서 변수는 받았지만 디비값들을 못불러옴
-            final JSONArray alarm_array = jsonObject1.getJSONArray(TAG_RESULT);
+            final JSONArray alarm_array = jsonObject1.getJSONArray("junghyun");
             //item=jsonObject1.getJSONObject(p);
 
-                Log.i("php에서 받은 변수: ", item.getJSONObject(TAG_RESULT).toString());
+              //  Log.i("php에서 받은 변수: ", item.getJSONObject(TAG_RESULT).toString());
+            Log.i("php에서 받은 변수: ", alarm_array.getJSONObject(0).toString());
                click_postop=alarm_array.getJSONObject(0);//php에서 받은 json객체의 문자열을 click_postop에 저장
                 Toast.makeText(getApplicationContext(), "도착합니다 : " + click_postop, Toast.LENGTH_LONG).show();
 

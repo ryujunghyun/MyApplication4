@@ -43,6 +43,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +65,7 @@ public class busLine extends AppCompatActivity {
     private static final String TAG_BELL = "bell";
     private static final String TAG_ROAD = "road";
     JSONObject item;
+    JSONObject click_postop;
     ArrayList<HashMap<String, String>> mBusList;
     ListAdapter adapter;
     ListView list;
@@ -73,6 +75,7 @@ public class busLine extends AppCompatActivity {
     String clickstop;
     String reservedstop;
     String bell;
+    int option_click=0;
     EditText busnamesearch;
     //int []count=new int[7];
     int []count = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -84,8 +87,9 @@ public class busLine extends AppCompatActivity {
     String getbusid;
     String getpassword;
 String getupdatepassword;
-int alram_bell;
-
+String alarm_bell="1";
+    String alarm_stop;
+    String pos_clickstop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +132,7 @@ int alram_bell;
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_refresh:
+                option_click=1;
                 Toast.makeText(this, "새로고침", Toast.LENGTH_SHORT).show();
                 //db내용 불러오고 노티파이
                // list = (ListView) findViewById(R.id.listView1);
@@ -174,7 +179,7 @@ int alram_bell;
             String busname = (String) params[0];
             String busid = (String) params[1];
             String password = (String) params[2];
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://223.194.132.35/bus.php";
             String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
@@ -252,7 +257,7 @@ int alram_bell;
                 int bell1 = item.getInt(TAG_BELL);
 
                 if (item.getInt(TAG_BELL) == 1) {
-                    alram_bell=item.getInt(TAG_BELL);
+
                     bell = "예약";
                 } else {
                     bell = " ";
@@ -317,24 +322,23 @@ int alram_bell;
                     clicked_position=position;
                     count[position] += 1;//아이템의 클릭 횟수 카운트
                     err_cnt=count[position];
-                    Log.i("진짜 ;", " "+count[position]);
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
                         if (count[position] > 0) {//클릭 발생시
-                           /* if (count[position] >= 2) {
+                           if (count[position] >= 2) {
                                 customDialog = new CustomDialog(busLine.this,
                                         "예약하기", // 제목
                                         "이미 예약되었습니다", // 내용
                                         leftListener// 왼쪽 버튼 이벤트
                                 ); // 오른쪽 버튼 이벤트
                                 customDialog.show();
-                            } else {*/
+                            } else
 
                                 if (bellArray[position] >= 1) {
 
                                     customDialog = new CustomDialog(busLine.this,
                                             "예약하기", // 제목
-                                            "이미 예약되었습니다", // 내용
+                                            "예약되었습니다", // 내용
                                             leftListener// 왼쪽 버튼 이벤트
                                     ); // 오른쪽 버튼 이벤트
                                     customDialog.show();
@@ -346,11 +350,15 @@ int alram_bell;
                                             rightListener// 오른쪽 버튼 이벤트
                                     );
                                     customDialog.show();
+                                    GetBustop searchBustop = new GetBustop();
+                                    searchBustop.execute(clickstop);
+                                    GetAlarm alarm = new GetAlarm();
+                                    alarm.execute(clickstop);
                                 }
 
                            //}
-                            GetBustop searchBustop = new GetBustop();
-                            searchBustop.execute(clickstop);
+
+
 
 
                         }
@@ -367,7 +375,7 @@ int alram_bell;
             /*입력한 정보가 하나라도 틀리거나 null일 경우*//*시간이 지나 비밀번호가 바뀐 경우 통과*/
             Log.i("클릭된 포지션", ": "+count[clicked_position] + " "+err_cnt);
             Log.i("클릭된 리스트", ": "+clicked_position);
-            if (err_cnt== 1) {
+            if (err_cnt== 1 || option_click==1) {
                 customDialog = new CustomDialog(busLine.this,
                         "비밀번호가 바뀌었습니다.", // 제목
                         "다시 입력해주세요", // 내용
@@ -409,6 +417,7 @@ int alram_bell;
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
             clickstop = result;
+
         }
 
 
@@ -418,7 +427,94 @@ int alram_bell;
             String searchKeyword = params[0];
  /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
 //alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://192.168.0.7/bus.php";
+            String serverURL = "http://223.194.132.35/bus.php";
+
+            String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
+
+            try {
+                URL url = new URL(serverURL);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+
+                InputStream inputStream;
+                if (responseStatusCode == HttpURLConnection.HTTP_OK) {
+                    inputStream = httpURLConnection.getInputStream();
+                } else {
+                    inputStream = httpURLConnection.getErrorStream();
+                }
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line);
+
+                }
+                bufferedReader.close();
+
+
+                return sb.toString().trim();
+            } catch (Exception e) {
+                Log.d(TAG, "InsertData: Error ", e);
+                errorString = e.toString();
+                return null;
+            }
+
+
+        }
+    }
+
+/*알림을 받는 부분*/
+    private class GetAlarm extends AsyncTask<String, Void, String> {
+        ProgressDialog progressDialog;
+        String errorString = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(busLine.this,
+                    "Please Wait", null, true, true);
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            progressDialog.dismiss();
+            // textview.setText(result);
+            Log.d(TAG, "response - " + result);
+            clickstop = result;//clickstop을 php로 보내는거, GetData다음에 GetAlarm이 호출되므로 clickstop은 null값이 아님
+            showResult2();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String searchKeyword = params[0];
+            /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
+//alarm_bell에 1인 값 저잗되어있음,
+            String serverURL = "http://223.194.132.35/posupdate.php";
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 
             try {
@@ -466,6 +562,22 @@ int alram_bell;
     }
 
 
+    private void showResult2() {
+        try {
+            final JSONObject jsonObject1 = new JSONObject(clickstop);//////////서버에서 변수는 받았지만 디비값들을 못불러옴
+            final JSONArray alarm_array = jsonObject1.getJSONArray(TAG_RESULT);
+            //item=jsonObject1.getJSONObject(p);
+
+                Log.i("php에서 받은 변수: ", item.getJSONObject(TAG_RESULT).toString());
+               click_postop=alarm_array.getJSONObject(0);//php에서 받은 json객체의 문자열을 click_postop에 저장
+                Toast.makeText(getApplicationContext(), "도착합니다 : " + click_postop, Toast.LENGTH_LONG).show();
+
+        }
+
+         catch (JSONException e) {
+            Log.d(TAG, "showResult : ", e);
+        }
+    }
 
     private View.OnClickListener leftListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -480,22 +592,6 @@ int alram_bell;
         }
     };
 
-    private View.OnClickListener updateListener = new View.OnClickListener() {
-        public void onClick(View v) {
-//새로운 다이얼로그에는 비밀번호만 입력하게해, 그래서 맨첨에 입력받은 getbusNum,getbusid와 새로입력한비번으로 데이터 불러옴->확인 클릭시 getdata
-            customDialog2 = new CustomDialog2(busLine.this, new View.OnClickListener() {
-                public void onClick(View v) {
-                    updatepassword=(EditText)customDialog2.findViewById(R.id.password);
-                    getupdatepassword=updatepassword.getText().toString();
-                    GetData updatedata=new GetData();
-                    updatedata.execute(getbusNum, getbusid, getupdatepassword);
-                    mBusList=new ArrayList<>();
-                }
-            }, leftListener);
-            customDialog2.show();
-            //customDialog.dismiss();//
-        }
-    };
 
     private View.OnClickListener rightListener = new View.OnClickListener() {
         public void onClick(View v) {

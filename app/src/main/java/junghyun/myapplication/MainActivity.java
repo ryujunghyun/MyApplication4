@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity {
         goBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog1 = new CustomDialog1(MainActivity.this,  new View.OnClickListener() {
+                customDialog1 = new CustomDialog1(MainActivity.this, new View.OnClickListener() {
                     public void onClick(View v) {
-                        ebusNum=((EditText)customDialog1.findViewById(R.id.busNum));
-                        ebusid=((EditText)customDialog1.findViewById(R.id.busid));
-                        ebuspassword=((EditText)customDialog1.findViewById(R.id.password));
-                       // if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
-                    //    if(ebusNum!=null && ebusid!=null && ebuspassword!=null){
-                        if(ebusNum.getText().toString()!=" " && ebusid.getText().toString()!=""&& ebuspassword.getText().toString()!=""){
+                        ebusNum = ((EditText) customDialog1.findViewById(R.id.busNum));
+                        ebusid = ((EditText) customDialog1.findViewById(R.id.busid));
+                        ebuspassword = ((EditText) customDialog1.findViewById(R.id.password));
+                        // if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
+                        //    if(ebusNum!=null && ebusid!=null && ebuspassword!=null){
+                        if (ebusNum.getText().toString() != " " && ebusid.getText().toString() != "" && ebuspassword.getText().toString() != "") {
                             tobusNum = ebusNum.getText().toString();
                             tobusid = ebusid.getText().toString();
                             topassword = ebuspassword.getText().toString();
@@ -87,15 +87,16 @@ public class MainActivity extends AppCompatActivity {
                             intent.putExtra("busid", tobusid);
                             intent.putExtra("password", topassword);
                             startActivity(intent);
-                        }
-                        else{
+
+                        } else {
                             Toast.makeText(MainActivity.this, "정보를 입력하세요", Toast.LENGTH_LONG).show();
                         }
                     }
                 }, rightListener);
                 customDialog1.show();
             }
-        });
+        }
+        );
 
         Button goReal = (Button) findViewById(R.id.realTime);
         goReal.setOnClickListener(new View.OnClickListener() {
@@ -124,11 +125,13 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), bell.class);
          //   intent.putExtra("busNum",busNum);
             startActivity(intent);
+
         }
     };
     private View.OnClickListener rightListener = new View.OnClickListener() {
         public void onClick(View v) {
             customDialog1.dismiss();
+            finish();
         }
     };
 
@@ -308,12 +311,15 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStop() {
         super.onStop();
+
+
         Log.i(TAG, getLocalClassName() + ".onStop");
     }
 
     @Override
 
     protected void onDestroy() {
+
         super.onDestroy();
         Log.i(TAG, getLocalClassName() + ".onDestroy");
     }

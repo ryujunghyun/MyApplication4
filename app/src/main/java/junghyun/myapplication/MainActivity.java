@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                       //   startActivity(intent);
                      }
                  }
-             }, rightListener);
+             }, rightListener2);
                 customDialog2.show();
 
             }
@@ -138,9 +138,15 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener rightListener = new View.OnClickListener() {
         public void onClick(View v) {
             customDialog1.dismiss();
-            finish();
         }
     };
+
+    private View.OnClickListener rightListener2 = new View.OnClickListener() {
+        public void onClick(View v) {
+            customDialog2.dismiss();
+        }
+    };
+
     private View.OnClickListener errorListener = new View.OnClickListener() {
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -207,8 +213,8 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             topassword1 = (String)params[0];
 
-            String serverURL = "http://223.194.130.43/bus.php";
-            String postParameters = "&password="+topassword1;
+            String serverURL = "http://223.194.130.43/realpw.php";
+            String postParameters = "&password1="+topassword1;
 
             try {
                 URL url = new URL(serverURL);

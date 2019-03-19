@@ -130,15 +130,15 @@ public class busLine extends AppCompatActivity {
         searchBusLine.execute(getbusNum, getbusid, getpassword);
         mBusList = new ArrayList<>();
 
-        //  GetAlarm alarm = new GetAlarm();
+      //    GetAlarm alarm = new GetAlarm();
         //alarm.execute(posupdateURL);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                GetAlarm alarm=new GetAlarm();
-                alarm.execute(posupdateURL);
-                handler.sendEmptyMessage(0);
+        //        GetAlarm alarm=new GetAlarm();
+          //      alarm.execute(posupdateURL);
+            //    handler.sendEmptyMessage(0);
 
             }
         });
@@ -360,8 +360,7 @@ public class busLine extends AppCompatActivity {
                             } else
 
                             if (bellArray[position] >= 1) {//한 번 클릭하면 알림 수신 가능
-                                  /*  GetAlarm alarm = new GetAlarm();
-                                    alarm.execute(clickstop);*/
+
                                 customDialog = new CustomDialog(busLine.this,
                                         "예약하기", // 제목
                                         "예약되었습니다", // 내용
@@ -541,8 +540,6 @@ public class busLine extends AppCompatActivity {
             }
 
 
-
-
         }
         @Override
         protected String doInBackground(String... params) {
@@ -645,7 +642,6 @@ public class busLine extends AppCompatActivity {
     @Override
 
     protected void onDestroy() {
-        tt.cancel();
         super.onDestroy();
         Log.i(TAG, getLocalClassName() + ".onDestroy");
     }

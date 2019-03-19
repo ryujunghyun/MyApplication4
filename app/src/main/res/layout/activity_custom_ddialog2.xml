@@ -17,7 +17,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:text="비밀번호가 변경되었습니다."
+            android:text="비밀번호를 입력하세요."
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:id="@+id/title"
@@ -44,7 +44,7 @@
             <EditText
                 android:layout_width="100dp"
                 android:layout_height="60dp"
-                android:id="@+id/password"
+                android:id="@+id/password1"
                 android:layout_weight="1"
                 />
         </LinearLayout>

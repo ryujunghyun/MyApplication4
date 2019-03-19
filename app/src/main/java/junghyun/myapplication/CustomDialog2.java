@@ -79,7 +79,7 @@ public class CustomDialog2 extends Dialog implements View.OnClickListener {
                 String password=updatepassword.getText().toString();
                 //인터페이스의 함수를 호출하여 변수에 저장된 값들을 Activity로 전달
 
-                customDialogListener2.onPositiveClicked( password);
+                customDialogListener2.onPositiveClicked(password);
                 dismiss();
                 break;
             case R.id.nbutton: //취소 버튼을 눌렀을 때

@@ -33,7 +33,9 @@ import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {
+    private CustomDialog customDialog;
     private CustomDialog1 customDialog1;
+    private CustomDialog2 customDialog2;
     private static final int request_code = 0;
     private static final String TAG = "ActivityLifeCycle";
     public String tobusNum;
@@ -43,16 +45,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_BNAME = "busname";
     private static final String TAG_BUSID = "busid";
     private static final String TAG_PW = "password";
-   // private static String TAG = "phpquerytest";
+
     private static final String TAG_RESULT = "webnautes";
     EditText ebusNum;
     EditText ebusid;
     EditText ebuspassword;
+    EditText ebuspassword1;
     String myJSON;
     String busname;
     String busid;
     String password;
     TextView textview;
+    String topassword1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,17 +106,20 @@ public class MainActivity extends AppCompatActivity {
         goReal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             customDialog1 = new CustomDialog1(MainActivity.this, new View.OnClickListener() {
+             customDialog2 = new CustomDialog2(MainActivity.this, new View.OnClickListener() {
                  public void onClick(View v) {
-                     ebusNum=((EditText)customDialog1.findViewById(R.id.busNum));
-                     tobusNum=ebusNum.getText().toString();
-
-                     Intent intent = new Intent(getApplicationContext(), bell.class);
-                     intent.putExtra("busNum",tobusNum);
-                     startActivity(intent);
+                    ebuspassword1=((EditText) customDialog2.findViewById(R.id.password1));
+                     if (ebuspassword1.getText().toString() != " ") {
+                         topassword1=ebuspassword1.getText().toString();
+                         //여기서 검사
+                         GetPW getpw = new GetPW();
+                         getpw.execute(topassword1);
+                    //     Intent intent = new Intent(getApplicationContext(), bell.class);
+                      //   startActivity(intent);
+                     }
                  }
              }, rightListener);
-                customDialog1.show();
+                customDialog2.show();
 
             }
         });
@@ -134,6 +141,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     };
+    private View.OnClickListener errorListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            customDialog.dismiss();
+        }
+    };
 
     @Override
 
@@ -147,14 +161,13 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "ActivityResult:" + resultCode + " " + msg);
 
     }
-/*
-    private class GetData extends AsyncTask<String, Void, String> {
+
+    private class GetPW extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
         String errorString = null;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             progressDialog = ProgressDialog.show(MainActivity.this,
                     "Please Wait", null, true, true);
         }
@@ -168,18 +181,34 @@ public class MainActivity extends AppCompatActivity {
                 textview.setText(errorString);
             } else {
                 myJSON = result;
+                Log.d(TAG, "response - " + result);
+                try {
+                    Log.i("result 값: ", result);
+                    final JSONObject jsonObject1 = new JSONObject(myJSON);//result: 곧 정차합니다->제이슨객체로 바꿔야함
+                    final JSONArray valid = jsonObject1.getJSONArray(TAG_RESULT);
+                    //  JSONArray alarm_array=jsonObject1.optJSONArray(TAG_RESULT);
+                    Log.i("비밀번호", "비밀번호" + valid.getJSONObject(0).toString());
 
-                showResult();
+                } catch (JSONException e) {
+                    customDialog = new CustomDialog(MainActivity.this,
+                            "정보가 틀렸습니다.", // 제목
+                            "다시 입력해주세요", // 내용
+                            errorListener// 에러 이벤트
+                    );
+
+                    customDialog.show();
+
+                    Log.d(TAG, "showResult : ", e);
+                }
             }
         }
 
         @Override
         protected String doInBackground(String... params) {
-            busname = (String)params[0];
-            busid=(String)params[1];
-            password=(String)params[2];
-            String serverURL = "http://192.168.0.7/bus.php";
-            String postParameters = "busname=" + busname + "&busid=" + busid + "&password="+password;
+            topassword1 = (String)params[0];
+
+            String serverURL = "http://223.194.130.43/bus.php";
+            String postParameters = "&password="+topassword1;
 
             try {
                 URL url = new URL(serverURL);
@@ -192,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 outputStream.write(postParameters.getBytes("UTF-8"));
-
                 outputStream.flush();
                 outputStream.close();
 
@@ -225,7 +253,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             } catch (Exception e) {
-
                 Log.d(TAG, "InsertData: Error ", e);
                 errorString = e.toString();
 
@@ -234,31 +261,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showResult() {
-        try {
-            final JSONObject jsonObject = new JSONObject(myJSON);
-            final JSONArray busArray = jsonObject.getJSONArray(TAG_RESULT);
-            HashMap<String, String> BusHashMap;
 
-            for (int i = 0; i < busArray.length(); i++) {
-                JSONObject item = busArray.getJSONObject(i);
-
-                String showbusname = item.getString(TAG_BNAME);
-                String showbusid = item.getString(TAG_BUSID);
-                String showpassword = item.getString(TAG_PW);
-                BusHashMap = new HashMap<>();
-
-                BusHashMap.put(TAG_BNAME, showbusname);
-                BusHashMap.put(TAG_BUSID, showbusid);
-                BusHashMap.put(TAG_PW, showpassword);
-                ///여기서 busname이랑 showbusname, 각각비교
-
-            }
-        }catch (JSONException e) {
-            Log.d(TAG, "showResult : ", e);
-        }
-    }
-    */
     @Override
 
     protected void onStart() {

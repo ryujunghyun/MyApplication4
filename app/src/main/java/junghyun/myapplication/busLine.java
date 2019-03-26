@@ -97,7 +97,7 @@ public class busLine extends AppCompatActivity {
 
     public Handler handler= new Handler();
 
-    String   posupdateURL = "http://223.194.130.43/posupdate.php";
+    String   posupdateURL = "http://223.194.154.47/posupdate.php";
     TimerTask tt;
     Timer timer;
     private Boolean isRunning = true;
@@ -126,9 +126,9 @@ public class busLine extends AppCompatActivity {
         }
 
         /*다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴*/
-        GetData searchBusLine = new GetData();
-        searchBusLine.execute(getbusNum, getbusid, getpassword);
-        mBusList = new ArrayList<>();
+      //  GetData searchBusLine = new GetData();
+        //searchBusLine.execute(getbusNum, getbusid, getpassword);
+        //mBusList = new ArrayList<>();
 
       //    GetAlarm alarm = new GetAlarm();
         //alarm.execute(posupdateURL);
@@ -204,7 +204,7 @@ public class busLine extends AppCompatActivity {
             String busname = (String) params[0];
             String busid = (String) params[1];
             String password = (String) params[2];
-            String serverURL = "http://223.194.130.43/bus.php";
+            String serverURL = "http://223.194.154.47/bus.php";
             String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
@@ -451,7 +451,7 @@ public class busLine extends AppCompatActivity {
             String searchKeyword = params[0];
             /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
 //alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://223.194.130.43/bus.php";
+            String serverURL = "http://223.194.154.47/bus.php";
 
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 

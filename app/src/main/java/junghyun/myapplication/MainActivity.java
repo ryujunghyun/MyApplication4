@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_BNAME = "busname";
     private static final String TAG_BUSID = "busid";
     private static final String TAG_PW = "password";
-
     private static final String TAG_RESULT = "webnautes";
+
     EditText ebusNum;
     EditText ebusid;
     EditText ebuspassword;
@@ -189,11 +189,12 @@ public class MainActivity extends AppCompatActivity {
                 myJSON = result;
                 Log.d(TAG, "response - " + result);
                 try {
-                    Log.i("result 값: ", result);
-                    final JSONObject jsonObject1 = new JSONObject(myJSON);//result: 곧 정차합니다->제이슨객체로 바꿔야함
-                    final JSONArray valid = jsonObject1.getJSONArray(TAG_RESULT);
-                    //  JSONArray alarm_array=jsonObject1.optJSONArray(TAG_RESULT);
-                    Log.i("비밀번호", "비밀번호" + valid.getJSONObject(0).toString());
+
+                        Log.i("result 값: ", result);
+                        final JSONObject jsonObject1 = new JSONObject(myJSON);//result: 곧 정차합니다->제이슨객체로 바꿔야함
+                        JSONArray valid = jsonObject1.getJSONArray(TAG_RESULT);
+                        //  JSONArray alarm_array=jsonObject1.optJSONArray(TAG_RESULT);
+                        Log.i("비밀번호", "비밀번호" + valid.getJSONObject(0).toString());
 
                 } catch (JSONException e) {
                     customDialog = new CustomDialog(MainActivity.this,
@@ -201,9 +202,7 @@ public class MainActivity extends AppCompatActivity {
                             "다시 입력해주세요", // 내용
                             errorListener// 에러 이벤트
                     );
-
                     customDialog.show();
-
                     Log.d(TAG, "showResult : ", e);
                 }
             }
@@ -213,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             topassword1 = (String)params[0];
 
-            String serverURL = "http://223.194.130.43/realpw.php";
+            String serverURL = "http://223.194.154.47/realpw.php";
             String postParameters = "&password1="+topassword1;
 
             try {
@@ -259,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             } catch (Exception e) {
+
                 Log.d(TAG, "InsertData: Error ", e);
                 errorString = e.toString();
 

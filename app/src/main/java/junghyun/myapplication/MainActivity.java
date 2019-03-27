@@ -195,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
                         JSONArray valid = jsonObject1.getJSONArray(TAG_RESULT);
                         //  JSONArray alarm_array=jsonObject1.optJSONArray(TAG_RESULT);
                         Log.i("비밀번호", "비밀번호" + valid.getJSONObject(0).toString());
+                        Intent intent1= new Intent(getApplicationContext(), bell.class);
+                        startActivity(intent1);
 
                 } catch (JSONException e) {
                     customDialog = new CustomDialog(MainActivity.this,

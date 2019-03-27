@@ -21,19 +21,19 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".busLine"
-            android:label="@string/title_activity_bus_line"
+            android:label="BUSTOP"
             android:parentActivityName=".busPW" />
         <activity
             android:name=".busPW"
-            android:label="@string/title_activity_bus_pw"
+            android:label="BUSTOP"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".bell"
-            android:label="@string/title_activity_bell"
+            android:label="BUSTOP"
             android:parentActivityName=".pwForRealtime" />
         <activity
             android:name=".animation"
-            android:label="@string/title_activity_animation"
+            android:label="BUSTOP"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,11 +43,11 @@
         </activity>
         <activity
             android:name=".pwForRealtime"
-            android:label="@string/title_activity_pw_for_realtime"
+            android:label="BUSTOP"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".LastActivity"
-            android:label="@string/title_activity_last"
+            android:label="BUSTOP"
             android:parentActivityName=".busLine" />
         <activity
             android:name=".CustomDialog"

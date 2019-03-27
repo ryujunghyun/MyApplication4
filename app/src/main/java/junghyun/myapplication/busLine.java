@@ -126,9 +126,9 @@ public class busLine extends AppCompatActivity {
         }
 
         /*다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴*/
-      //  GetData searchBusLine = new GetData();
-        //searchBusLine.execute(getbusNum, getbusid, getpassword);
-        //mBusList = new ArrayList<>();
+      GetData searchBusLine = new GetData();
+       searchBusLine.execute(getbusNum, getbusid, getpassword);
+        mBusList = new ArrayList<>();
 
       //    GetAlarm alarm = new GetAlarm();
         //alarm.execute(posupdateURL);

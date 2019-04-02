@@ -52,7 +52,7 @@ public class bell extends AppCompatActivity {
 
         drop = (Button) findViewById(R.id.drop);
         cancel = (Button) findViewById(R.id.cancel);
-
+        Intent intent=getIntent();
         //기기가 블루투스를 지원하는지 확인
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         if(btAdapter==null){

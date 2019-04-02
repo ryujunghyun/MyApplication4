@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,11 +59,21 @@ public class MainActivity extends AppCompatActivity {
     String password;
     TextView textview;
     String topassword1;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         LayoutInflater inflater=(LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout=inflater.inflate(R.layout.activity_custom_dialog1, (ViewGroup)findViewById(R.id.customdialog1));
 
@@ -129,10 +141,18 @@ public class MainActivity extends AppCompatActivity {
 
     private View.OnClickListener leftListener = new View.OnClickListener() {
         public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), bell.class);
-         //   intent.putExtra("busNum",busNum);
-            startActivity(intent);
-
+            if (ebusNum.getText().toString() == " " && ebusid.getText().toString() == "" && ebuspassword.getText().toString() == ""){
+                customDialog = new CustomDialog(MainActivity.this,
+                        "입력해주세요.", // 제목
+                        "다시 입력해주세요", // 내용
+                        errorListener// 에러 이벤트
+                );
+            customDialog.show();}
+            else {
+                Intent intent = new Intent(getApplicationContext(), bell.class);
+                //   intent.putExtra("busNum",busNum);
+                startActivity(intent);
+            }
         }
     };
     private View.OnClickListener rightListener = new View.OnClickListener() {
@@ -214,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             topassword1 = (String)params[0];
 
-            String serverURL = "http://223.194.154.47/realpw.php";
+            String serverURL = "http://192.168.0.7/realpw.php";
             String postParameters = "&password1="+topassword1;
 
             try {

@@ -13,8 +13,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,17 +99,26 @@ public class busLine extends AppCompatActivity {
 
     public Handler handler= new Handler();
 
-    String   posupdateURL = "http://223.194.154.47/posupdate.php";
+    String   posupdateURL = "http://223.194.133.73/posupdate.php";
     TimerTask tt;
     Timer timer;
     private Boolean isRunning = true;
     Button btn;
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_line);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(R.drawable.title_logo); // 타이틀 대신 로고를 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
@@ -204,7 +215,7 @@ public class busLine extends AppCompatActivity {
             String busname = (String) params[0];
             String busid = (String) params[1];
             String password = (String) params[2];
-            String serverURL = "http://223.194.154.47/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
@@ -329,14 +340,14 @@ public class busLine extends AppCompatActivity {
                     busLine.this, mBusList, R.layout.list_item,
                     new String[]{TAG_BNAME, TAG_BUSID, TAG_SNAME, TAG_BELL},
                     new int[]{R.id.busname, R.id.busid, R.id.bustopname, R.id.bell}
-            );//여기에 bell=1인걸 따로 표시하는 방법 생각
+            );
 
             list.setAdapter(adapter);
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     this);
 
 
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 //  int []count = new int[]{0, 0, 0, 0, 0, 0, 0};
 
 
@@ -451,7 +462,7 @@ public class busLine extends AppCompatActivity {
             String searchKeyword = params[0];
             /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
 //alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://223.194.154.47/bus.php";
+            String serverURL = "http://192.168.0.7/bus.php";
 
             String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
 

@@ -7,13 +7,36 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent">
+
     <ImageView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="140dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:src="@drawable/title_logo"
+        tools:ignore="HardcodedText" />
+
+</android.support.v7.widget.Toolbar>
+
+
+
+<ImageView
         android:id="@+id/logo"
-        android:src="@drawable/logo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="100dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_marginLeft="83dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/logo" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -38,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="20dp"
+            android:background="@drawable/button"
             android:text="예약하기"
             android:textSize="20dp" />
 
@@ -54,9 +78,9 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginTop="20dp"
-            android:text="벨을 누르시겠습니까?"
+            android:text="곧 내리십니까?"
             android:textSize="30dp" />
         <Button
             android:id="@+id/realTime"
@@ -64,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
+            android:background="@drawable/button"
             android:text="벨누르기"
             android:textSize="17dp" />
 

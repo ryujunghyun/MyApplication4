@@ -5,12 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
+    android:orientation="vertical"
     tools:context=".animation">
 
     <ImageView
-        android:layout_width="400dp"
-        android:layout_height="600dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="80dp"
+        android:id="@+id/title"
+        android:src="@drawable/title"
+        />
+
+    <ImageView
         android:id="@+id/bus"
-        android:src="@drawable/bus"/>
+        android:layout_width="300dp"
+        android:layout_height="334dp"
+        android:layout_marginLeft="50dp"
+        android:src="@drawable/logo" />
 
 </LinearLayout>

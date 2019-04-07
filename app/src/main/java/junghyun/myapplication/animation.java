@@ -14,12 +14,14 @@ import android.widget.ImageView;
 
 public class animation extends AppCompatActivity {
     ImageView bus1;
+    ImageView title;
 
     int mScreenHeight;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_animation);
+        title=(ImageView)findViewById(R.id.title);
         bus1=(ImageView) findViewById(R.id.bus);
 
     }

@@ -137,19 +137,19 @@ public class busLine extends AppCompatActivity {
         }
 
         /*다이얼로그에서 버스번호,아이디 입력받은값으로 리스트뷰 불러옴*/
-      GetData searchBusLine = new GetData();
-       searchBusLine.execute(getbusNum, getbusid, getpassword);
+        GetData searchBusLine = new GetData();
+        searchBusLine.execute(getbusNum, getbusid, getpassword);
         mBusList = new ArrayList<>();
 
-      //    GetAlarm alarm = new GetAlarm();
+        //    GetAlarm alarm = new GetAlarm();
         //alarm.execute(posupdateURL);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-        //        GetAlarm alarm=new GetAlarm();
-          //      alarm.execute(posupdateURL);
-            //    handler.sendEmptyMessage(0);
+                //        GetAlarm alarm=new GetAlarm();
+                //      alarm.execute(posupdateURL);
+                //    handler.sendEmptyMessage(0);
 
             }
         });
@@ -347,7 +347,7 @@ public class busLine extends AppCompatActivity {
                     this);
 
 
-           list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 //  int []count = new int[]{0, 0, 0, 0, 0, 0, 0};
 
 

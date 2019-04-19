@@ -99,7 +99,7 @@ public class busLine extends AppCompatActivity {
 
     public Handler handler= new Handler();
 
-    String   posupdateURL = "http://223.194.133.73/posupdate.php";
+    String   posupdateURL = "http://192.168.0.7/posupdate.php";
     TimerTask tt;
     Timer timer;
     private Boolean isRunning = true;
@@ -115,7 +115,7 @@ public class busLine extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setIcon(R.drawable.title_logo); // 타이틀 대신 로고를 추가
+        //  getSupportActionBar().setIcon(R.drawable.title_logo); // 타이틀 대신 로고를 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);

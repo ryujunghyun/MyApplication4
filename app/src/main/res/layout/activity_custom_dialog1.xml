@@ -22,7 +22,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
-                    android:background="@color/colorAccent"/>
+                    android:background="@color/deepblue"/>
                 <TextView
                     android:text="버스번호와 아이디를 입력하세요"
                     android:layout_width="match_parent"
@@ -32,12 +32,12 @@
                     android:layout_weight="1"
                     android:textSize="23dp"
                     android:textStyle="bold"
-                    android:background="@color/colorAccent"
+                    android:background="@color/deepblue"
                     />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
-                    android:background="@color/colorAccent"/>
+                    android:background="@color/deepblue"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

@@ -11,5 +11,7 @@
     <color name="lightblue">#FF1BD8D2</color>
     <color name="yellow">#a6d81b</color>
     <color name="background">#FFA6D81B</color>
+    <color name="bluegrey">#adb9ca</color>
+    <color name="deepblue">#557bb1</color>
 
 </resources>

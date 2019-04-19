@@ -12,10 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +35,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -70,17 +75,17 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
         actionBar.setDisplayShowTitleEnabled(false);
-
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         LayoutInflater inflater=(LayoutInflater)getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         final View layout=inflater.inflate(R.layout.activity_custom_dialog1, (ViewGroup)findViewById(R.id.customdialog1));
 
-        ImageView logo = (ImageView) findViewById(R.id.logo);
-        TextView text2 = (TextView) findViewById(R.id.textView2);
-        TextView text3 = (TextView) findViewById(R.id.textView3);
-        Button goBusNum = (Button) findViewById(R.id.reservation);
+
+       // ImageView logo = (ImageView) findViewById(R.id.logo);
+       // TextView text2 = (TextView) findViewById(R.id.textView2);
+        //TextView text3 = (TextView) findViewById(R.id.textView3);
+        ImageButton goBusNum = (ImageButton) findViewById(R.id.reservation);
         goBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         }
         );
 
-        Button goReal = (Button) findViewById(R.id.realTime);
+        ImageButton goReal = (ImageButton) findViewById(R.id.realTime);
         goReal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +142,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater1 = getMenuInflater();
+        inflater1.inflate(R.menu.menu1, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_descript:
+
+                customDialog=new CustomDialog(MainActivity.this,
+                        "사용 안내",
+                        "하차 정류장을 예약하시려면 '예약'버튼을" +
+                        "   바로 하차하시려면 'BELL'을 누르십시오.",
+                            normalListener
+                );
+                customDialog.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 
     private View.OnClickListener leftListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -164,6 +193,12 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener rightListener2 = new View.OnClickListener() {
         public void onClick(View v) {
             customDialog2.dismiss();
+        }
+    };
+
+    private View.OnClickListener normalListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            customDialog.dismiss();
         }
     };
 

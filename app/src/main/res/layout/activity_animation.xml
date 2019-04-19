@@ -4,24 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#adb9ca"
     android:orientation="vertical"
     tools:context=".animation">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="80dp"
-        android:id="@+id/title"
-        android:src="@drawable/title"
-        />
 
     <ImageView
         android:id="@+id/bus"
-        android:layout_width="300dp"
-        android:layout_height="334dp"
-        android:layout_marginLeft="50dp"
-        android:src="@drawable/logo" />
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/buslogo" />
+
+    <ImageView
+        android:id="@+id/title"
+        android:layout_width="213dp"
+        android:layout_height="79dp"
+        android:layout_marginLeft="90dp"
+        android:src="@drawable/title" />
 
 </LinearLayout>

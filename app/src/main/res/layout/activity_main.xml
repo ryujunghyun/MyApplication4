@@ -9,91 +9,60 @@
     android:background="@color/white">
 
 
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
         android:layout_gravity="center"
-        android:background="@color/grey">
+        android:background="@color/bluegrey"
+        android:elevation="2dp">
 
-    <ImageView
-        android:id="@+id/toolbar_title"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="140dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:src="@drawable/title_logo"
-        tools:ignore="HardcodedText" />
-
-</android.support.v7.widget.Toolbar>
-
-
-
-<ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:layout_marginLeft="83dp"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/logo" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
-
-        <TextView
-            android:id="@+id/textView2"
+        <ImageView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="예약을 원하십니까?"
-            android:textSize="30dp" />
+            android:layout_marginLeft="119dp"
+            android:gravity="center"
+            android:src="@drawable/title"
+            tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/reservation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button"
-            android:text="예약하기"
-            android:textSize="20dp" />
+    </android.support.v7.widget.Toolbar>
 
-       </LinearLayout>
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView3"
+        <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:layout_marginTop="20dp"
-            android:text="곧 내리십니까?"
-            android:textSize="30dp" />
-        <Button
-            android:id="@+id/realTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button"
-            android:text="벨누르기"
-            android:textSize="17dp" />
+            android:layout_height="500dp"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/stop" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="250dp"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/reservation"
+                android:layout_width="110dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="120dp"
+                android:src="@drawable/reservebtn" />
+
+            <ImageButton
+                android:id="@+id/realTime"
+                android:layout_width="119dp"
+                android:layout_height="73dp"
+                android:layout_marginLeft="112dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/realtimebtn" />
+        </LinearLayout>
 
 
+    </FrameLayout>
 </LinearLayout>
+

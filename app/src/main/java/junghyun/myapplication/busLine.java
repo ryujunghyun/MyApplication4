@@ -122,7 +122,7 @@ public class busLine extends AppCompatActivity {
 
         textview = (TextView) findViewById(R.id.textView);
         list = (ListView) findViewById(R.id.listView1);
-        btn=(Button)findViewById(R.id.btn);
+
         //  busnamesearch = (EditText) findViewById(R.id.editBusNum);
 
 
@@ -143,16 +143,6 @@ public class busLine extends AppCompatActivity {
 
         //    GetAlarm alarm = new GetAlarm();
         //alarm.execute(posupdateURL);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //        GetAlarm alarm=new GetAlarm();
-                //      alarm.execute(posupdateURL);
-                //    handler.sendEmptyMessage(0);
-
-            }
-        });
 
 
     }

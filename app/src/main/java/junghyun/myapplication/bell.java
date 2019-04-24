@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class bell extends AppCompatActivity {
     private StringBuilder sb = new StringBuilder();
     private static int flag = 0;
 
-    Button drop, cancel;
+    ImageButton drop;
     Handler h;
 
     private ConnectedThread mConnectedThread;
@@ -50,8 +51,8 @@ public class bell extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bell);
 
-        drop = (Button) findViewById(R.id.drop);
-        cancel = (Button) findViewById(R.id.cancel);
+        drop = (ImageButton) findViewById(R.id.drop);
+
         Intent intent=getIntent();
         //기기가 블루투스를 지원하는지 확인
         btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -61,8 +62,8 @@ public class bell extends AppCompatActivity {
             return;
         }
 
-        drop = (Button) findViewById(R.id.drop);
-        cancel = (Button) findViewById(R.id.cancel);
+        drop = (ImageButton) findViewById(R.id.drop);
+
 
         h = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -73,7 +74,7 @@ public class bell extends AppCompatActivity {
                         sb.append(strIncom);
                         int endOfLineIndex = sb.indexOf("\r\n");
                         drop.setEnabled(true);
-                        cancel.setEnabled(true);
+                      
                 }
             }
         };
@@ -84,12 +85,7 @@ public class bell extends AppCompatActivity {
                 //Toast.makeText(getBaseContext(), "Turn on First LED", Toast.LENGTH_SHORT).show();
             }
         });
-        cancel.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                mConnectedThread.write("2");
-                //Toast.makeText(getBaseContext(), "Turn on Second LED", Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
 
     public void onStart(){

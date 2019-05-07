@@ -10,16 +10,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.support.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomDialog1 extends Dialog implements View.OnClickListener {
     private TextView title;
     public EditText ebusid;
     public EditText ebusNum;
+
     public EditText epassword;
     private Button mPositiveButton;
     private Button mNegativeButton;
@@ -28,7 +37,6 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
     public View.OnClickListener mPositiveListener;
     public View.OnClickListener mNegativeListener;
     public CustomDialogListener1 customDialogListener1;
-
 
 
     //인터페이스 설정
@@ -48,21 +56,26 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         layoutParams.dimAmount = 0.8f;
         getWindow().setAttributes(layoutParams);
 
         setContentView(R.layout.activity_custom_dialog1);
+
         title=(TextView)findViewById(R.id.title) ;
+
+
         ebusid=(EditText) findViewById(R.id.busid);
         ebusNum=(EditText) findViewById(R.id.busNum);
         epassword=(EditText)findViewById(R.id.password);
 
-
+        epassword.setInputType( InputType.TYPE_TEXT_VARIATION_PASSWORD );
+        epassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
 //제목과 내용은 생성자에서 설정
 
-       // epassword.setText(mPassword);
+        // epassword.setText(mPassword);
 
 
         //셋팅
@@ -73,6 +86,7 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
         mNegativeButton.setOnClickListener(mNegativeListener);
 
     } ;
+
 
     @Override
     public void onClick(View v) {
@@ -96,10 +110,10 @@ public class CustomDialog1 extends Dialog implements View.OnClickListener {
 
 
     public CustomDialog1(@NonNull Context context
-                        /*String mPassword*/, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
+            /*String mPassword*/, View.OnClickListener positiveListener, View.OnClickListener negativeListener) {
         super(context);
 
-   //     this.mPassword=mPassword;
+        //     this.mPassword=mPassword;
         this.mPositiveListener = positiveListener;
         this.mNegativeListener = negativeListener;
 

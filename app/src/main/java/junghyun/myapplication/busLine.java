@@ -50,6 +50,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -80,6 +81,7 @@ public class busLine extends AppCompatActivity {
     TextView textview;
     EditText editText;
     String clickstop;
+    String clickbustopid;
     String reservedstop;
     String bell;
     int option_click=0;
@@ -98,7 +100,7 @@ public class busLine extends AppCompatActivity {
     public final static int REPEAT_DELAY = 1000;
 
     public Handler handler= new Handler();
-
+    String serverURL = "http://223.194.133.96/bus.php";
     String   posupdateURL = "http://192.168.0.7/posupdate.php";
     TimerTask tt;
     Timer timer;
@@ -147,6 +149,7 @@ public class busLine extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -171,6 +174,9 @@ public class busLine extends AppCompatActivity {
 
         }
     }
+
+
+
 
     private class GetData extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
@@ -205,7 +211,6 @@ public class busLine extends AppCompatActivity {
             String busname = (String) params[0];
             String busid = (String) params[1];
             String password = (String) params[2];
-            String serverURL = "http://192.168.0.7/bus.php";
             String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
 
             try {
@@ -288,20 +293,13 @@ public class busLine extends AppCompatActivity {
                     bell = " ";
                 }
 
-                /* GetData에서 할지 GetBustop에서 할지 결정하기
-                 * */
-
-                //    String bell = String.valueOf(item.getInt(TAG_BELL));//int형bell을 list에 나타내기 위해 string로 변환
-
                 BusHashMap = new HashMap<>();
                 //     BellHashMap=new HashMap<>();
 
-                //      BusHashMap.put(TAG_ID, id);
                 BusHashMap.put(TAG_BNAME, busname);
                 BusHashMap.put(TAG_BUSID, busid);
                 BusHashMap.put(TAG_SNAME, bustopname);
                 BusHashMap.put(TAG_BELL, bell);
-
 
                 busid = BusHashMap.get(TAG_BUSID);
                 Log.i(" 아이디: ", busid);
@@ -349,7 +347,7 @@ public class busLine extends AppCompatActivity {
                     err_cnt=count[position];
                     try {
                         clickstop = busArray.getJSONObject(position).getString(TAG_SNAME);//클릭된 아이디로 정류장이름 찾기
-
+                        clickbustopid = busArray.getJSONObject(position).getString(TAG_BUSID);
                         if (count[position] > 0) {//클릭 발생시
                             if (count[position] >= 2) {//2번 클릭한 사용자는 알림을 수신할 필요 x
                                 customDialog = new CustomDialog(busLine.this,
@@ -358,13 +356,11 @@ public class busLine extends AppCompatActivity {
                                         leftListener// 왼쪽 버튼 이벤트
                                 ); // 오른쪽 버튼 이벤트
                                 customDialog.show();
-                            } else
-
-                            if (bellArray[position] >= 1) {//한 번 클릭하면 알림 수신 가능
-
+                            }
+                            else if (bellArray[position] >= 1) {//한 번 클릭하면 알림 수신 가능
                                 customDialog = new CustomDialog(busLine.this,
                                         "예약하기", // 제목
-                                        "예약되었습니다", // 내용
+                                        "이미 예약되었습니다", // 내용
                                         leftListener// 왼쪽 버튼 이벤트
                                 ); // 오른쪽 버튼 이벤트
                                 customDialog.show();
@@ -380,11 +376,6 @@ public class busLine extends AppCompatActivity {
                                 searchBustop.execute(clickstop);
 
                             }
-
-                            //}
-
-
-
 
                         }
                     } catch (JSONException e) {
@@ -442,7 +433,6 @@ public class busLine extends AppCompatActivity {
             // textview.setText(result);
             Log.d(TAG, "response - " + result);
             clickstop = result;
-
         }
 
 
@@ -450,12 +440,10 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            /*알림 받기조건:( bell=1 && clickstop && bpos=7일 떄), (bell=1 && clickstop && bpos=21) 이렇게 각각 하기*/
-//alarm_bell에 1인 값 저잗되어있음,
-            String serverURL = "http://192.168.0.7/bus.php";
+            String searchKeyword1 = params[1];
 
-            String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
-
+            String postParameters = "clickstop=" + searchKeyword +"$clickbustopid="+searchKeyword1; //php로 전달하는 매개변수
+    ;
             try {
                 URL url = new URL(serverURL);
 

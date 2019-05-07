@@ -17,6 +17,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,6 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String topassword1;
     Toolbar toolbar;
+    String serverURL = "http://223.194.133.96/realpw.php";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
         final View layout=inflater.inflate(R.layout.activity_custom_dialog1, (ViewGroup)findViewById(R.id.customdialog1));
 
 
+    // 검색에 사용될 데이터를 리스트에 추가한다.
+
+
        // ImageView logo = (ImageView) findViewById(R.id.logo);
        // TextView text2 = (TextView) findViewById(R.id.textView2);
         //TextView text3 = (TextView) findViewById(R.id.textView3);
@@ -89,13 +97,19 @@ public class MainActivity extends AppCompatActivity {
         goBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 customDialog1 = new CustomDialog1(MainActivity.this, new View.OnClickListener() {
+
                     public void onClick(View v) {
+
                         ebusNum = ((EditText) customDialog1.findViewById(R.id.busNum));
                         ebusid = ((EditText) customDialog1.findViewById(R.id.busid));
                         ebuspassword = ((EditText) customDialog1.findViewById(R.id.password));
+
                         // if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
                         //    if(ebusNum!=null && ebusid!=null && ebuspassword!=null){
+
+
                         if (ebusNum.getText().toString() != " " && ebusid.getText().toString() != "" && ebuspassword.getText().toString() != "") {
                             tobusNum = ebusNum.getText().toString();
                             tobusid = ebusid.getText().toString();
@@ -141,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -269,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             topassword1 = (String)params[0];
 
-            String serverURL = "http://192.168.0.7/realpw.php";
+          //  String serverURL = "http://192.168.0.7/realpw.php";
             String postParameters = "&password1="+topassword1;
 
             try {

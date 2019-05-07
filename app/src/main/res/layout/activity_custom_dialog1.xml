@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="#ffffff"
+
     android:id="@+id/customdialog1"
     >
 
@@ -15,10 +15,11 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
+
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000000"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:background="#000000" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
@@ -58,26 +59,29 @@
                             android:id="@+id/busNum"
                             android:layout_weight="1"
                             />
+
+
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="아이디: "/>
                         <EditText
                             android:layout_width="100dp"
-                          android:layout_height="60dp"
-                           android:id="@+id/busid"
-                           android:layout_weight="1"
-                           />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="비밀번호: "/>
-                    <EditText
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
-                        android:id="@+id/password"
-                        android:layout_weight="1"
-                        />
+                            android:layout_height="60dp"
+                            android:id="@+id/busid"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="비밀번호: "/>
+                        <EditText
+                            android:layout_width="100dp"
+                            android:layout_height="60dp"
+                            android:id="@+id/password"
+                            android:layout_weight="1"
+                            />
                 </LinearLayout>
         </LinearLayout>
 
@@ -115,4 +119,3 @@
                 </LinearLayout>
         </LinearLayout>
 </LinearLayout>
-

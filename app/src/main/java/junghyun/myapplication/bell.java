@@ -9,8 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class bell extends AppCompatActivity {
@@ -45,11 +51,22 @@ public class bell extends AppCompatActivity {
 
     // MAC-address of Bluetooth module (you must edit this line)
     private static String address = "20:16:02:30:44:18";
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bell);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true); //커스터마이징 하기 위해 필요
+        actionBar.setDisplayShowTitleEnabled(false);
+        //  getSupportActionBar().setIcon(R.drawable.title_logo); // 타이틀 대신 로고를 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         drop = (ImageButton) findViewById(R.id.drop);
 
@@ -74,7 +91,7 @@ public class bell extends AppCompatActivity {
                         sb.append(strIncom);
                         int endOfLineIndex = sb.indexOf("\r\n");
                         drop.setEnabled(true);
-                      
+
                 }
             }
         };
@@ -87,6 +104,7 @@ public class bell extends AppCompatActivity {
         });
 
     }
+
 
     public void onStart(){
         super.onStart(); //블루투스가 활성화 되어있는지 확인

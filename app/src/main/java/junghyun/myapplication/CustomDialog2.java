@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -53,10 +55,10 @@ public class CustomDialog2 extends Dialog implements View.OnClickListener {
         setContentView(R.layout.activity_custom_ddialog2);
         title=(TextView)findViewById(R.id.title) ;
 
-        updatepassword=(EditText)findViewById(R.id.password);
+        updatepassword=(EditText)findViewById(R.id.password1);
 
-
-//제목과 내용은 생성자에서 설정
+        updatepassword.setInputType( InputType.TYPE_TEXT_VARIATION_PASSWORD );
+        updatepassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
         // epassword.setText(mPassword);
 

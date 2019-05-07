@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String topassword1;
     Toolbar toolbar;
-    String serverURL = "http://223.194.133.96/realpw.php";
+    String serverURL = "http://192.168.0.7/realpw.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

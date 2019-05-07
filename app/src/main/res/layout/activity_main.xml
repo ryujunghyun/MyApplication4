@@ -21,7 +21,8 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="70dp"
+
             android:foregroundGravity="center"
             android:src="@drawable/resbtn"
             tools:ignore="HardcodedText" />

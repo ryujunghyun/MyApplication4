@@ -100,7 +100,7 @@ public class busLine extends AppCompatActivity {
     public final static int REPEAT_DELAY = 1000;
 
     public Handler handler= new Handler();
-    String serverURL = "http://223.194.133.96/bus.php";
+    String serverURL = "http://192.168.0.7/bus.php";
     String   posupdateURL = "http://192.168.0.7/posupdate.php";
     TimerTask tt;
     Timer timer;
@@ -373,7 +373,7 @@ public class busLine extends AppCompatActivity {
                                 );
                                 customDialog.show();
                                 GetBustop searchBustop = new GetBustop();
-                                searchBustop.execute(clickstop);
+                                searchBustop.execute(clickstop,clickbustopid);
 
                             }
 
@@ -439,10 +439,12 @@ public class busLine extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String searchKeyword = params[0];
-        //    String searchKeyword1 = params[1];
+            String searchKeyword = (String)params[0];
+          String searchKeyword1 = (String)params[1];
 
-            String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
+//            String postParameters = "busname=" + busname + "&busid=" + busid + "&password=" + password;
+
+            String postParameters = "clickstop=" + searchKeyword + "&clickbustopid=" + clickbustopid; //php로 전달하는 매개변수
     ;
             try {
                 URL url = new URL(serverURL);

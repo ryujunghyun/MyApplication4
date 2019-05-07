@@ -440,9 +440,9 @@ public class busLine extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             String searchKeyword = params[0];
-            String searchKeyword1 = params[1];
+        //    String searchKeyword1 = params[1];
 
-            String postParameters = "clickstop=" + searchKeyword +"$clickbustopid="+searchKeyword1; //php로 전달하는 매개변수
+            String postParameters = "clickstop=" + searchKeyword; //php로 전달하는 매개변수
     ;
             try {
                 URL url = new URL(serverURL);

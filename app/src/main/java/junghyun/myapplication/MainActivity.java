@@ -97,18 +97,15 @@ public class MainActivity extends AppCompatActivity {
         goBusNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 customDialog1 = new CustomDialog1(MainActivity.this, new View.OnClickListener() {
 
                     public void onClick(View v) {
-
                         ebusNum = ((EditText) customDialog1.findViewById(R.id.busNum));
                         ebusid = ((EditText) customDialog1.findViewById(R.id.busid));
                         ebuspassword = ((EditText) customDialog1.findViewById(R.id.password));
 
                         // if(!ebusNum.getText().equals(" ") && !ebusid.getText().equals(" ") && !ebuspassword.getText().equals(" ")) {
                         //    if(ebusNum!=null && ebusid!=null && ebuspassword!=null){
-
 
                         if (ebusNum.getText().toString() != " " && ebusid.getText().toString() != "" && ebuspassword.getText().toString() != "") {
                             tobusNum = ebusNum.getText().toString();

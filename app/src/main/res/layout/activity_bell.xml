@@ -25,15 +25,25 @@
             android:src="@drawable/btn"
             tools:ignore="HardcodedText" />
     </android.support.v7.widget.Toolbar>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_marginLeft="3dp"
         android:text="이번 정류장에서 하차할게요"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="25dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/avatar" />
+</LinearLayout>
 
     <ImageButton
         android:id="@+id/drop"

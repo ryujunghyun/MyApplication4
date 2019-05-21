@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textview;
     String topassword1;
     Toolbar toolbar;
-    String serverURL = "http://192.168.0.7/realpw.php";
+    String serverURL = "http://172.20.10.2/realpw.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "response - " + result);
             if (result == null) {
                 textview.setText(errorString);
+                Toast.makeText(MainActivity.this, "Null입니다.", Toast.LENGTH_LONG).show();
             } else {
                 myJSON = result;
                 Log.d(TAG, "response - " + result);

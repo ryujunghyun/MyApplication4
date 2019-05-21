@@ -28,11 +28,12 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_marginTop="20dp"
     android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="70dp"
-        android:layout_marginLeft="3dp"
         android:text="이번 정류장에서 하차할게요"
         android:textStyle="bold"
         android:layout_gravity="center"
@@ -47,14 +48,11 @@
 
     <ImageButton
         android:id="@+id/drop"
-        android:layout_width="378dp"
-        android:layout_height="349dp"
+        android:layout_width="405dp"
+        android:layout_height="396dp"
         android:layout_gravity="top|center"
         android:layout_marginLeft="10dp"
-
         android:background="#ffffff"
-        android:src="@drawable/bell"
-
-        />
+        android:src="@drawable/bell" />
 
 </LinearLayout>

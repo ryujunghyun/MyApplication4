@@ -100,7 +100,7 @@ public class busLine extends AppCompatActivity {
     public final static int REPEAT_DELAY = 1000;
 
     public Handler handler= new Handler();
-    String serverURL = "http://192.168.0.7/bus.php";
+    String serverURL = "http://172.20.10.2/bus.php";
     String   posupdateURL = "http://192.168.0.7/posupdate.php";
     TimerTask tt;
     Timer timer;

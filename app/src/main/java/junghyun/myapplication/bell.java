@@ -99,7 +99,7 @@ public class bell extends AppCompatActivity {
         drop.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 mConnectedThread.write("1");
-                //Toast.makeText(getBaseContext(), "Turn on First LED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Turn on First LED", Toast.LENGTH_SHORT).show();
             }
         });
 
